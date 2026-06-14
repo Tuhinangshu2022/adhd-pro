@@ -1,2156 +1,926 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Life OS - Own the Day</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Supabase SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-      :root {
-        --bg: #0a0a0c;
-        --bg2: #111114;
-        --bg3: #18181c;
-        --bg4: #1f1f24;
-        --border: rgba(255, 255, 255, 0.07);
-        --border2: rgba(255, 255, 255, 0.13);
-        --text: #ece9e3;
-        --text2: #7a7875;
-        --text3: #444;
-        --amber: #f0a500;
-        --amber2: rgba(240, 165, 0, 0.12);
-        --green: #22c87a;
-        --green2: rgba(34, 200, 122, 0.12);
-        --red: #e05a5a;
-        --red2: rgba(224, 90, 90, 0.1);
-        --blue: #5b9cf6;
-        --blue2: rgba(91, 156, 246, 0.1);
-        --purple: #9f87f5;
-        --purple2: rgba(159, 135, 245, 0.1);
-        --pink: #e07ab0;
-        --radius: 10px;
-        --rsm: 6px;
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
-      body {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        background: var(--bg);
-        color: var(--text);
-        min-height: 100vh;
-        font-size: 14px;
-        line-height: 1.6;
-        padding-bottom: 100px;
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Life OS - Own the Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg:     #0a0a0c;
+  --bg2:    #111114;
+  --bg3:    #18181c;
+  --bg4:    #1f1f24;
+  --border: rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.13);
+  --text:   #ece9e3;
+  --text2:  #7a7875;
+  --text3:  #444;
+  --amber:  #f0a500;
+  --amber2: rgba(240,165,0,0.12);
+  --green:  #22c87a;
+  --green2: rgba(34,200,122,0.12);
+  --red:    #e05a5a;
+  --red2:   rgba(224,90,90,0.1);
+  --blue:   #5b9cf6;
+  --blue2:  rgba(91,156,246,0.1);
+  --purple: #9f87f5;
+  --purple2:rgba(159,135,245,0.1);
+  --pink:   #e07ab0;
+  --radius: 10px;
+  --rsm:    6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;padding-bottom:100px}
 
-      /* --- LOGIN OVERLAY --- */
-      #login-overlay {
-        position: fixed;
-        inset: 0;
-        background: var(--bg);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-      }
-      #login-overlay.hidden {
-        display: none;
-      }
-      .login-box {
-        background: var(--bg2);
-        border: 0.5px solid var(--border2);
-        border-radius: 14px;
-        padding: 36px 28px;
-        max-width: 360px;
-        width: 100%;
-        text-align: center;
-      }
-      .login-logo {
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 4px;
-      }
-      .login-logo span {
-        color: var(--amber);
-      }
-      .login-sub {
-        font-size: 12px;
-        color: var(--text3);
-        margin-bottom: 28px;
-      }
-      .login-field {
-        text-align: left;
-        margin-bottom: 14px;
-      }
-      .login-field label {
-        font-size: 11px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--text3);
-        display: block;
-        margin-bottom: 5px;
-      }
-      .login-field input {
-        width: 100%;
-        padding: 10px 13px;
-        background: var(--bg3);
-        border: 0.5px solid var(--border2);
-        border-radius: var(--rsm);
-        color: var(--text);
-        font-family: inherit;
-        font-size: 14px;
-        outline: none;
-      }
-      .login-field input:focus {
-        border-color: var(--amber);
-      }
-      .login-btn {
-        width: 100%;
-        padding: 11px;
-        background: var(--amber2);
-        border: 0.5px solid var(--amber);
-        color: var(--amber);
-        font-family: inherit;
-        font-size: 14px;
-        font-weight: 600;
-        border-radius: var(--rsm);
-        cursor: pointer;
-        margin-top: 8px;
-        transition: all 0.15s;
-      }
-      .login-btn:hover {
-        background: rgba(240, 165, 0, 0.22);
-      }
-      .login-err {
-        font-size: 12px;
-        color: var(--red);
-        margin-top: 10px;
-        min-height: 18px;
-      }
-      .sync-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 11px;
-        padding: 3px 9px;
-        border-radius: 20px;
-        background: var(--green2);
-        border: 0.5px solid var(--green);
-        color: var(--green);
-      }
-      .sync-badge.syncing {
-        background: var(--amber2);
-        border-color: var(--amber);
-        color: var(--amber);
-      }
-      .sync-badge.err {
-        background: var(--red2);
-        border-color: var(--red);
-        color: var(--red);
-      }
+/* --- LOGIN OVERLAY --- */
+#login-overlay{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+#login-overlay.hidden{display:none}
+.login-box{background:var(--bg2);border:0.5px solid var(--border2);border-radius:14px;padding:36px 28px;max-width:360px;width:100%;text-align:center}
+.login-logo{font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px}
+.login-logo span{color:var(--amber)}
+.login-sub{font-size:12px;color:var(--text3);margin-bottom:28px}
+.login-field{text-align:left;margin-bottom:14px}
+.login-field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);display:block;margin-bottom:5px}
+.login-field input{width:100%;padding:10px 13px;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-family:inherit;font-size:14px;outline:none}
+.login-field input:focus{border-color:var(--amber)}
+.login-btn{width:100%;padding:11px;background:var(--amber2);border:0.5px solid var(--amber);color:var(--amber);font-family:inherit;font-size:14px;font-weight:600;border-radius:var(--rsm);cursor:pointer;margin-top:8px;transition:all .15s}
+.login-btn:hover{background:rgba(240,165,0,.22)}
+.login-err{font-size:12px;color:var(--red);margin-top:10px;min-height:18px}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:20px;background:var(--green2);border:0.5px solid var(--green);color:var(--green)}
+.sync-badge.syncing{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
+.sync-badge.err{background:var(--red2);border-color:var(--red);color:var(--red)}
 
-      /* --- LAYOUT --- */
-      .app {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 0 16px;
-      }
-      .topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 0 16px;
-        border-bottom: 0.5px solid var(--border);
-        margin-bottom: 18px;
-      }
-      .topbar h1 {
-        font-size: 17px;
-        font-weight: 700;
-        letter-spacing: -0.3px;
-        color: var(--text);
-      }
-      .topbar h1 span {
-        color: var(--amber);
-      }
-      .topbar-right {
-        font-size: 11px;
-        color: var(--text3);
-      }
+/* --- LAYOUT --- */
+.app{max-width:720px;margin:0 auto;padding:0 16px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;border-bottom:0.5px solid var(--border);margin-bottom:18px}
+.topbar h1{font-size:17px;font-weight:700;letter-spacing:-0.3px;color:var(--text)}
+.topbar h1 span{color:var(--amber)}
+.topbar-right{font-size:11px;color:var(--text3)}
 
-      /* --- TABS --- */
-      .tabs {
-        display: flex;
-        gap: 3px;
-        flex-wrap: wrap;
-        margin-bottom: 22px;
-      }
-      .tab-btn {
-        padding: 5px 12px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        font-size: 12px;
-        cursor: pointer;
-        background: transparent;
-        color: var(--text2);
-        font-family: inherit;
-        transition: all 0.15s;
-      }
-      .tab-btn:hover {
-        border-color: var(--border2);
-        color: var(--text);
-      }
-      .tab-btn.on {
-        background: var(--bg3);
-        color: var(--text);
-        border-color: var(--border2);
-        font-weight: 600;
-      }
-      .pnl {
-        display: none;
-      }
-      .pnl.on {
-        display: block;
-      }
+/* --- TABS --- */
+.tabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:22px}
+.tab-btn{padding:5px 12px;border-radius:var(--rsm);border:0.5px solid var(--border);font-size:12px;cursor:pointer;background:transparent;color:var(--text2);font-family:inherit;transition:all .15s}
+.tab-btn:hover{border-color:var(--border2);color:var(--text)}
+.tab-btn.on{background:var(--bg3);color:var(--text);border-color:var(--border2);font-weight:600}
+.pnl{display:none}.pnl.on{display:block}
 
-      /* --- PAYAL GUIDE --- */
-      .payal-bar {
-        background: var(--bg2);
-        border: 0.5px solid var(--amber);
-        border-radius: var(--radius);
-        padding: 12px 14px;
-        margin-bottom: 20px;
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-      }
-      .payal-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: var(--amber2);
-        border: 1.5px solid var(--amber);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        flex-shrink: 0;
-      }
-      .payal-body {
-        flex: 1;
-      }
-      .payal-name {
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--amber);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-bottom: 2px;
-      }
-      .payal-msg {
-        font-size: 13px;
-        color: var(--text2);
-        line-height: 1.6;
-        font-style: italic;
-      }
+/* --- PAYAL GUIDE --- */
+.payal-bar{background:var(--bg2);border:0.5px solid var(--amber);border-radius:var(--radius);padding:12px 14px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start}
+.payal-avatar{width:32px;height:32px;border-radius:50%;background:var(--amber2);border:1.5px solid var(--amber);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.payal-body{flex:1}
+.payal-name{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.payal-msg{font-size:13px;color:var(--text2);line-height:1.6;font-style:italic}
 
-      /* --- CARDS & FORMS --- */
-      .sec-label {
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.09em;
-        color: var(--text3);
-        margin-bottom: 9px;
-      }
-      .card {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius);
-        padding: 14px 16px;
-        margin-bottom: 8px;
-      }
-      .card p {
-        font-size: 13px;
-        color: var(--text2);
-        line-height: 1.7;
-      }
-      .row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .divider {
-        height: 0.5px;
-        background: var(--border);
-        margin: 18px 0;
-      }
-      input,
-      select,
-      textarea {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--rsm);
-        color: var(--text);
-        font-family: inherit;
-        font-size: 13px;
-        padding: 8px 11px;
-        outline: none;
-        transition: border-color 0.15s;
-        width: 100%;
-      }
-      input:focus,
-      select:focus,
-      textarea:focus {
-        border-color: var(--amber);
-      }
-      select option {
-        background: #18181c;
-      }
-      textarea {
-        resize: vertical;
-        line-height: 1.6;
-      }
-      textarea::placeholder,
-      input::placeholder {
-        color: var(--text3);
-      }
-      .add-row {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 16px;
-        flex-wrap: wrap;
-      }
-      .add-row input,
-      .add-row select {
-        flex: 1;
-        min-width: 0;
-      }
-      .btn {
-        padding: 7px 15px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border2);
-        font-size: 12px;
-        cursor: pointer;
-        font-family: inherit;
-        background: transparent;
-        color: var(--text);
-        transition: all 0.15s;
-        white-space: nowrap;
-      }
-      .btn:hover {
-        background: var(--bg3);
-      }
-      .btn-amber {
-        background: var(--amber2);
-        border-color: var(--amber);
-        color: var(--amber);
-      }
-      .btn-amber:hover {
-        background: rgba(240, 165, 0, 0.2);
-      }
-      .btn-green {
-        background: var(--green2);
-        border-color: var(--green);
-        color: var(--green);
-      }
-      .btn-red {
-        background: var(--red2);
-        border-color: var(--red);
-        color: var(--red);
-      }
-      .btn-full {
-        width: 100%;
-        margin-top: 8px;
-        padding: 9px;
-      }
-      .btn-sm {
-        padding: 5px 10px;
-        font-size: 11px;
-      }
+/* --- CARDS & FORMS --- */
+.sec-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--text3);margin-bottom:9px}
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:8px}
+.card p{font-size:13px;color:var(--text2);line-height:1.7}
+.row{display:flex;align-items:center;gap:8px}
+.divider{height:.5px;background:var(--border);margin:18px 0}
+input,select,textarea{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--rsm);color:var(--text);font-family:inherit;font-size:13px;padding:8px 11px;outline:none;transition:border-color .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--amber)}
+select option{background:#18181c}
+textarea{resize:vertical;line-height:1.6}
+textarea::placeholder,input::placeholder{color:var(--text3)}
+.add-row{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.add-row input,.add-row select{flex:1;min-width:0}
+.btn{padding:7px 15px;border-radius:var(--rsm);border:0.5px solid var(--border2);font-size:12px;cursor:pointer;font-family:inherit;background:transparent;color:var(--text);transition:all .15s;white-space:nowrap}
+.btn:hover{background:var(--bg3)}
+.btn-amber{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
+.btn-amber:hover{background:rgba(240,165,0,.2)}
+.btn-green{background:var(--green2);border-color:var(--green);color:var(--green)}
+.btn-red{background:var(--red2);border-color:var(--red);color:var(--red)}
+.btn-full{width:100%;margin-top:8px;padding:9px}
+.btn-sm{padding:5px 10px;font-size:11px}
 
-      /* --- TIME PICKER MODAL --- */
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.75);
-        z-index: 500;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-      }
-      .modal-overlay.hidden {
-        display: none;
-      }
-      .time-modal {
-        background: var(--bg2);
-        border: 0.5px solid var(--border2);
-        border-radius: 14px;
-        padding: 24px;
-        max-width: 340px;
-        width: 100%;
-      }
-      .time-modal h3 {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 18px;
-        text-align: center;
-      }
-      .time-picker-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        margin-bottom: 20px;
-      }
-      .time-col {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-      }
-      .time-col label {
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--text3);
-      }
-      .time-scroll {
-        height: 140px;
-        overflow-y: scroll;
-        border: 0.5px solid var(--border2);
-        border-radius: var(--rsm);
-        background: var(--bg3);
-        scrollbar-width: none;
-      }
-      .time-scroll::-webkit-scrollbar {
-        display: none;
-      }
-      .time-item {
-        padding: 8px 16px;
-        font-size: 14px;
-        color: var(--text2);
-        cursor: pointer;
-        text-align: center;
-        transition: all 0.15s;
-        user-select: none;
-      }
-      .time-item:hover {
-        color: var(--text);
-        background: var(--bg4);
-      }
-      .time-item.sel {
-        background: var(--amber2);
-        color: var(--amber);
-        font-weight: 700;
-        border-radius: 4px;
-      }
-      .time-sep {
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--amber);
-        padding-bottom: 8px;
-      }
-      .time-to-sep {
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--text3);
-        padding: 0 4px;
-        align-self: center;
-        margin-top: 20px;
-      }
-      .time-preview {
-        text-align: center;
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 16px;
-        padding: 10px;
-        background: var(--bg3);
-        border-radius: var(--rsm);
-      }
-      .time-modal-btns {
-        display: flex;
-        gap: 8px;
-      }
-      .time-conflict-warn {
-        font-size: 12px;
-        color: var(--red);
-        text-align: center;
-        margin-bottom: 10px;
-        min-height: 18px;
-      }
+/* --- TIME PICKER MODAL --- */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.hidden{display:none}
+.time-modal{background:var(--bg2);border:0.5px solid var(--border2);border-radius:14px;padding:24px;max-width:340px;width:100%}
+.time-modal h3{font-size:14px;font-weight:700;color:var(--text);margin-bottom:18px;text-align:center}
+.time-picker-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px}
+.time-col{display:flex;flex-direction:column;align-items:center;gap:6px}
+.time-col label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+.time-scroll{height:140px;overflow-y:scroll;border:0.5px solid var(--border2);border-radius:var(--rsm);background:var(--bg3);scrollbar-width:none}
+.time-scroll::-webkit-scrollbar{display:none}
+.time-item{padding:8px 16px;font-size:14px;color:var(--text2);cursor:pointer;text-align:center;transition:all .15s;user-select:none}
+.time-item:hover{color:var(--text);background:var(--bg4)}
+.time-item.sel{background:var(--amber2);color:var(--amber);font-weight:700;border-radius:4px}
+.time-sep{font-size:22px;font-weight:700;color:var(--amber);padding-bottom:8px}
+.time-to-sep{font-size:14px;font-weight:700;color:var(--text3);padding:0 4px;align-self:center;margin-top:20px}
+.time-preview{text-align:center;font-size:15px;font-weight:700;color:var(--text);margin-bottom:16px;padding:10px;background:var(--bg3);border-radius:var(--rsm)}
+.time-modal-btns{display:flex;gap:8px}
+.time-conflict-warn{font-size:12px;color:var(--red);text-align:center;margin-bottom:10px;min-height:18px}
 
-      /* --- STATS --- */
-      .stat-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-        gap: 7px;
-        margin-bottom: 18px;
-      }
-      .stat {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius);
-        padding: 13px 14px;
-      }
-      .stat .n {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--text);
-        letter-spacing: -1px;
-      }
-      .stat .n.amber {
-        color: var(--amber);
-      }
-      .stat .n.green {
-        color: var(--green);
-      }
-      .stat .l {
-        font-size: 11px;
-        color: var(--text2);
-        margin-top: 1px;
-      }
+/* --- STATS --- */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:7px;margin-bottom:18px}
+.stat{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:13px 14px}
+.stat .n{font-size:24px;font-weight:700;color:var(--text);letter-spacing:-1px}
+.stat .n.amber{color:var(--amber)}
+.stat .n.green{color:var(--green)}
+.stat .l{font-size:11px;color:var(--text2);margin-top:1px}
 
-      /* --- RING --- */
-      .ring-wrap {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 18px;
-      }
+/* --- RING --- */
+.ring-wrap{display:flex;justify-content:center;margin-bottom:18px}
 
-      /* --- TASK BLOCKS --- */
-      .blk {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 9px 13px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 5px;
-        transition: opacity 0.2s;
-      }
-      .blk.done {
-        opacity: 0.4;
-      }
-      .dot-btn {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 1.5px solid var(--border2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        cursor: pointer;
-        background: transparent;
-        transition: all 0.15s;
-      }
-      .dot-btn.ck {
-        background: var(--green);
-        border-color: var(--green);
-      }
-      .dot-btn svg {
-        width: 10px;
-        height: 10px;
-        stroke: #fff;
-        stroke-width: 2.5;
-        fill: none;
-        display: none;
-      }
-      .dot-btn.ck svg {
-        display: block;
-      }
-      .blk-time {
-        font-size: 11px;
-        color: var(--text3);
-        min-width: 72px;
-        flex-shrink: 0;
-      }
-      .blk-task {
-        font-size: 13px;
-        color: var(--text);
-        flex: 1;
-      }
-      .blk.done .blk-task {
-        text-decoration: line-through;
-        color: var(--text3);
-      }
-      .chip {
-        font-size: 10px;
-        padding: 2px 7px;
-        border-radius: 20px;
-        white-space: nowrap;
-        flex-shrink: 0;
-        font-weight: 600;
-      }
-      .ch {
-        background: var(--green2);
-        color: var(--green);
-      }
-      .cw {
-        background: var(--blue2);
-        color: var(--blue);
-      }
-      .cm {
-        background: rgba(240, 165, 0, 0.1);
-        color: var(--amber);
-      }
-      .cs {
-        background: var(--purple2);
-        color: var(--purple);
-      }
-      .cl {
-        background: rgba(224, 122, 176, 0.1);
-        color: var(--pink);
-      }
-      .cr {
-        background: rgba(120, 120, 120, 0.08);
-        color: #888;
-      }
-      .prio-xh {
-        background: rgba(224, 90, 90, 0.15);
-        color: var(--red);
-        font-weight: 700;
-      }
-      .prio-h {
-        background: rgba(240, 165, 0, 0.12);
-        color: var(--amber);
-        font-weight: 700;
-      }
-      .prio-m {
-        background: var(--blue2);
-        color: var(--blue);
-      }
-      .prio-l {
-        background: rgba(120, 120, 120, 0.08);
-        color: #888;
-      }
-      .del-btn {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        color: var(--text3);
-        font-size: 14px;
-        flex-shrink: 0;
-        transition: color 0.15s;
-        padding: 2px 4px;
-        line-height: 1;
-      }
-      .del-btn:hover {
-        color: var(--red);
-      }
+/* --- TASK BLOCKS --- */
+.blk{display:flex;align-items:center;gap:8px;padding:9px 13px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:5px;transition:opacity .2s}
+.blk.done{opacity:.4}
+.dot-btn{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;background:transparent;transition:all .15s}
+.dot-btn.ck{background:var(--green);border-color:var(--green)}
+.dot-btn svg{width:10px;height:10px;stroke:#fff;stroke-width:2.5;fill:none;display:none}
+.dot-btn.ck svg{display:block}
+.blk-time{font-size:11px;color:var(--text3);min-width:72px;flex-shrink:0}
+.blk-task{font-size:13px;color:var(--text);flex:1}
+.blk.done .blk-task{text-decoration:line-through;color:var(--text3)}
+.chip{font-size:10px;padding:2px 7px;border-radius:20px;white-space:nowrap;flex-shrink:0;font-weight:600}
+.ch{background:var(--green2);color:var(--green)}
+.cw{background:var(--blue2);color:var(--blue)}
+.cm{background:rgba(240,165,0,.1);color:var(--amber)}
+.cs{background:var(--purple2);color:var(--purple)}
+.cl{background:rgba(224,122,176,.1);color:var(--pink)}
+.cr{background:rgba(120,120,120,.08);color:#888}
+.prio-xh{background:rgba(224,90,90,.15);color:var(--red);font-weight:700}
+.prio-h{background:rgba(240,165,0,.12);color:var(--amber);font-weight:700}
+.prio-m{background:var(--blue2);color:var(--blue)}
+.prio-l{background:rgba(120,120,120,.08);color:#888}
+.del-btn{background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:14px;flex-shrink:0;transition:color .15s;padding:2px 4px;line-height:1}
+.del-btn:hover{color:var(--red)}
 
-      /* --- TIMER --- */
-      .timer-outer {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius);
-        padding: 24px 20px 20px;
-        margin-bottom: 16px;
-        text-align: center;
-      }
-      .tmode-row {
-        display: flex;
-        justify-content: center;
-        gap: 5px;
-        margin-bottom: 18px;
-        flex-wrap: wrap;
-      }
-      .tmode {
-        padding: 5px 13px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        font-size: 12px;
-        cursor: pointer;
-        background: transparent;
-        color: var(--text2);
-        font-family: inherit;
-        transition: all 0.15s;
-      }
-      .tmode:hover {
-        color: var(--text);
-        border-color: var(--border2);
-      }
-      .tmode.on {
-        background: var(--bg3);
-        color: var(--text);
-        border-color: var(--border2);
-        font-weight: 600;
-      }
-      .timer-sub {
-        font-size: 12px;
-        color: var(--text2);
-        margin-bottom: 16px;
-      }
-      .t-btns {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-      }
+/* --- TIMER --- */
+.timer-outer{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:24px 20px 20px;margin-bottom:16px;text-align:center}
+.tmode-row{display:flex;justify-content:center;gap:5px;margin-bottom:18px;flex-wrap:wrap}
+.tmode{padding:5px 13px;border-radius:var(--rsm);border:0.5px solid var(--border);font-size:12px;cursor:pointer;background:transparent;color:var(--text2);font-family:inherit;transition:all .15s}
+.tmode:hover{color:var(--text);border-color:var(--border2)}
+.tmode.on{background:var(--bg3);color:var(--text);border-color:var(--border2);font-weight:600}
+.timer-sub{font-size:12px;color:var(--text2);margin-bottom:16px}
+.t-btns{display:flex;justify-content:center;gap:8px}
 
-      /* --- PROCESS --- */
-      .proc-step {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        padding: 10px 13px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 5px;
-      }
-      .proc-num {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        background: var(--bg3);
-        border: 0.5px solid var(--border2);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--text2);
-        flex-shrink: 0;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .proc-num.dn {
-        background: var(--green2);
-        border-color: var(--green);
-        color: var(--green);
-      }
-      .proc-txt {
-        font-size: 13px;
-        color: var(--text);
-        line-height: 1.5;
-        flex: 1;
-      }
-      .proc-txt.dn {
-        text-decoration: line-through;
-        color: var(--text3);
-      }
+/* --- PROCESS --- */
+.proc-step{display:flex;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:5px}
+.proc-num{width:22px;height:22px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2);flex-shrink:0;cursor:pointer;transition:all .15s}
+.proc-num.dn{background:var(--green2);border-color:var(--green);color:var(--green)}
+.proc-txt{font-size:13px;color:var(--text);line-height:1.5;flex:1}
+.proc-txt.dn{text-decoration:line-through;color:var(--text3)}
 
-      /* --- WEEK GRID --- */
-      .week-grid {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 4px;
-        margin-bottom: 16px;
-      }
-      .day-b {
-        border: 0.5px solid var(--border);
-        border-radius: var(--rsm);
-        padding: 8px 4px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-      .day-b:hover {
-        border-color: var(--border2);
-      }
-      .day-b.td {
-        border-color: var(--amber);
-      }
-      .day-b.fl {
-        background: var(--green2);
-        border-color: var(--green);
-      }
-      .day-n {
-        font-size: 10px;
-        color: var(--text3);
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-      }
-      .day-s {
-        font-size: 15px;
-        font-weight: 600;
-        color: var(--text2);
-        margin-top: 3px;
-      }
-      .day-b.fl .day-s {
-        color: var(--green);
-      }
+/* --- WEEK GRID --- */
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+.day-b{border:0.5px solid var(--border);border-radius:var(--rsm);padding:8px 4px;text-align:center;cursor:pointer;transition:all .15s}
+.day-b:hover{border-color:var(--border2)}
+.day-b.td{border-color:var(--amber)}
+.day-b.fl{background:var(--green2);border-color:var(--green)}
+.day-n{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em}
+.day-s{font-size:15px;font-weight:600;color:var(--text2);margin-top:3px}
+.day-b.fl .day-s{color:var(--green)}
 
-      /* --- ENERGY --- */
-      .energy-row {
-        margin-bottom: 14px;
-      }
-      .energy-lbl {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 5px;
-      }
-      .energy-lbl span {
-        font-size: 12px;
-        color: var(--text2);
-      }
-      .energy-lbl .ev {
-        font-weight: 700;
-        color: var(--text);
-      }
-      input[type="range"] {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 3px;
-        border-radius: 2px;
-        background: var(--bg3);
-        cursor: pointer;
-        border: none;
-        padding: 0;
-      }
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        background: var(--amber);
-        cursor: pointer;
-        border: 2px solid var(--bg);
-      }
-      .advice-box {
-        padding: 12px 14px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        font-size: 13px;
-        color: var(--text2);
-        line-height: 1.6;
-        margin-top: 10px;
-        transition: border-color 0.3s;
-      }
+/* --- ENERGY --- */
+.energy-row{margin-bottom:14px}
+.energy-lbl{display:flex;justify-content:space-between;margin-bottom:5px}
+.energy-lbl span{font-size:12px;color:var(--text2)}
+.energy-lbl .ev{font-weight:700;color:var(--text)}
+input[type=range]{-webkit-appearance:none;appearance:none;height:3px;border-radius:2px;background:var(--bg3);cursor:pointer;border:none;padding:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber);cursor:pointer;border:2px solid var(--bg)}
+.advice-box{padding:12px 14px;border-radius:var(--rsm);border:0.5px solid var(--border);font-size:13px;color:var(--text2);line-height:1.6;margin-top:10px;transition:border-color .3s}
 
-      /* --- AFFIRMATIONS --- */
-      .aff-card {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        padding: 12px 14px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 6px;
-      }
-      .aff-icon {
-        font-size: 16px;
-        flex-shrink: 0;
-        margin-top: 1px;
-      }
-      .aff-txt {
-        font-size: 13px;
-        color: var(--text2);
-        line-height: 1.6;
-        flex: 1;
-      }
-      .aff-del {
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        color: var(--text3);
-        font-size: 13px;
-        flex-shrink: 0;
-        transition: color 0.15s;
-        padding: 2px;
-      }
-      .aff-del:hover {
-        color: var(--red);
-      }
+/* --- AFFIRMATIONS --- */
+.aff-card{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:6px}
+.aff-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.aff-txt{font-size:13px;color:var(--text2);line-height:1.6;flex:1}
+.aff-del{background:transparent;border:none;cursor:pointer;color:var(--text3);font-size:13px;flex-shrink:0;transition:color .15s;padding:2px}
+.aff-del:hover{color:var(--red)}
 
-      /* --- RULES --- */
-      .rule-item {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        padding: 11px 14px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 6px;
-      }
-      .rule-icon {
-        font-size: 17px;
-        flex-shrink: 0;
-        margin-top: 1px;
-        color: var(--purple);
-      }
-      .rule-t {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 2px;
-      }
-      .rule-d {
-        font-size: 12px;
-        color: var(--text2);
-        line-height: 1.5;
-      }
+/* --- RULES --- */
+.rule-item{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:6px}
+.rule-icon{font-size:17px;flex-shrink:0;margin-top:1px;color:var(--purple)}
+.rule-t{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+.rule-d{font-size:12px;color:var(--text2);line-height:1.5}
 
-      /* --- MINDSET --- */
-      .mind-card {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        padding: 13px 15px;
-        border-radius: var(--radius);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 8px;
-      }
-      .mind-icon {
-        font-size: 17px;
-        flex-shrink: 0;
-        margin-top: 2px;
-        color: var(--amber);
-      }
-      .mind-card p {
-        font-size: 13px;
-        color: var(--text2);
-        line-height: 1.7;
-        flex: 1;
-      }
+/* --- MINDSET --- */
+.mind-card{display:flex;gap:10px;align-items:flex-start;padding:13px 15px;border-radius:var(--radius);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:8px}
+.mind-icon{font-size:17px;flex-shrink:0;margin-top:2px;color:var(--amber)}
+.mind-card p{font-size:13px;color:var(--text2);line-height:1.7;flex:1}
 
-      /* --- WIN / JOURNAL CARDS --- */
-      .win-b {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius);
-        padding: 12px 14px;
-        margin-bottom: 8px;
-      }
-      .saved-item {
-        padding: 9px 13px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 5px;
-      }
-      .saved-item .si-label {
-        font-size: 10px;
-        color: var(--text3);
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
-        margin-bottom: 3px;
-      }
-      .saved-item .si-text {
-        font-size: 13px;
-        color: var(--text);
-        line-height: 1.5;
-      }
-      .saved-item .si-meta {
-        font-size: 11px;
-        color: var(--text3);
-        margin-top: 4px;
-      }
+/* --- WIN / JOURNAL CARDS --- */
+.win-b{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:8px}
+.saved-item{padding:9px 13px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:5px}
+.saved-item .si-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px}
+.saved-item .si-text{font-size:13px;color:var(--text);line-height:1.5}
+.saved-item .si-meta{font-size:11px;color:var(--text3);margin-top:4px}
 
-      /* --- UPSKILLING --- */
-      .skill-tag {
-        display: inline-block;
-        font-size: 11px;
-        padding: 2px 9px;
-        border-radius: 20px;
-        border: 0.5px solid var(--purple);
-        color: var(--purple);
-        background: var(--purple2);
-        margin: 2px;
-      }
+/* --- UPSKILLING --- */
+.skill-tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;border:0.5px solid var(--purple);color:var(--purple);background:var(--purple2);margin:2px}
 
-      /* --- ANALYTICS / CHARTS --- */
-      .chart-wrap {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius);
-        padding: 16px;
-        margin-bottom: 14px;
-      }
-      .chart-title {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 12px;
-      }
-      .bar-chart {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .bar-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      .bar-label {
-        font-size: 11px;
-        color: var(--text2);
-        min-width: 32px;
-        text-align: right;
-      }
-      .bar-track {
-        flex: 1;
-        background: var(--bg3);
-        border-radius: 2px;
-        height: 8px;
-        overflow: hidden;
-      }
-      .bar-fill {
-        height: 8px;
-        border-radius: 2px;
-        transition: width 0.6s ease;
-      }
-      .bar-val {
-        font-size: 11px;
-        color: var(--text2);
-        min-width: 28px;
-      }
-      .donut-row {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-        flex-wrap: wrap;
-      }
-      .donut-legend {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-      }
-      .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        color: var(--text2);
-      }
-      .legend-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        flex-shrink: 0;
-      }
-      .mood-timeline {
-        display: flex;
-        align-items: flex-end;
-        gap: 4px;
-        height: 60px;
-        padding-top: 10px;
-      }
-      .mood-bar-col {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 3px;
-      }
-      .mood-bar-fill {
-        width: 100%;
-        border-radius: 2px 2px 0 0;
-        background: var(--amber);
-        opacity: 0.7;
-        transition: height 0.5s;
-      }
-      .mood-bar-day {
-        font-size: 9px;
-        color: var(--text3);
-        text-align: center;
-      }
+/* --- ANALYTICS / CHARTS --- */
+.chart-wrap{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.chart-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:12px}
+.bar-chart{display:flex;flex-direction:column;gap:6px}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-label{font-size:11px;color:var(--text2);min-width:32px;text-align:right}
+.bar-track{flex:1;background:var(--bg3);border-radius:2px;height:8px;overflow:hidden}
+.bar-fill{height:8px;border-radius:2px;transition:width .6s ease}
+.bar-val{font-size:11px;color:var(--text2);min-width:28px}
+.donut-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.donut-legend{display:flex;flex-direction:column;gap:5px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.mood-timeline{display:flex;align-items:flex-end;gap:4px;height:60px;padding-top:10px}
+.mood-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.mood-bar-fill{width:100%;border-radius:2px 2px 0 0;background:var(--amber);opacity:.7;transition:height .5s}
+.mood-bar-day{font-size:9px;color:var(--text3);text-align:center}
 
-      /* --- DUMP SECTION --- */
-      .dump-item {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--rsm);
-        padding: 10px 13px;
-        margin-bottom: 5px;
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-      }
-      .dump-text {
-        font-size: 13px;
-        color: var(--text2);
-        flex: 1;
-        line-height: 1.5;
-      }
+/* --- DUMP SECTION --- */
+.dump-item{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--rsm);padding:10px 13px;margin-bottom:5px;display:flex;align-items:flex-start;gap:8px}
+.dump-text{font-size:13px;color:var(--text2);flex:1;line-height:1.5}
 
-      /* --- KNOW ME --- */
-      .know-q {
-        background: var(--bg2);
-        border: 0.5px solid var(--border);
-        border-radius: var(--radius);
-        padding: 13px 15px;
-        margin-bottom: 8px;
-      }
-      .know-q .q {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 8px;
-      }
+/* --- KNOW ME --- */
+.know-q{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:13px 15px;margin-bottom:8px}
+.know-q .q{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
 
-      /* --- HOST GUIDE --- */
-      .host-step {
-        padding: 14px 16px;
-        border-radius: var(--rsm);
-        border: 0.5px solid var(--border);
-        background: var(--bg2);
-        margin-bottom: 7px;
-      }
-      .host-step-num {
-        font-size: 10px;
-        font-weight: 700;
-        color: var(--amber);
-        letter-spacing: 0.07em;
-        text-transform: uppercase;
-        margin-bottom: 4px;
-      }
-      .host-step-title {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--text);
-        margin-bottom: 4px;
-      }
-      .host-step-desc {
-        font-size: 12px;
-        color: var(--text2);
-        line-height: 1.6;
-      }
-      .host-step code {
-        background: var(--bg3);
-        padding: 1px 5px;
-        border-radius: 3px;
-        font-size: 11px;
-        color: var(--amber);
-        font-family: monospace;
-      }
+/* --- HOST GUIDE --- */
+.host-step{padding:14px 16px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg2);margin-bottom:7px}
+.host-step-num{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.host-step-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.host-step-desc{font-size:12px;color:var(--text2);line-height:1.6}
+.host-step code{background:var(--bg3);padding:1px 5px;border-radius:3px;font-size:11px;color:var(--amber);font-family:monospace}
 
-      /* --- SCROLLBAR --- */
-      ::-webkit-scrollbar {
-        width: 4px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--bg4);
-        border-radius: 2px;
-      }
+/* --- SCROLLBAR --- */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
 
-      /* --- RESPONSIVE --- */
-      @media (max-width: 480px) {
-        .stat .n {
-          font-size: 20px;
-        }
-        .tabs {
-          gap: 2px;
-        }
-        .tab-btn {
-          padding: 5px 9px;
-          font-size: 11px;
-        }
-      }
+/* --- RESPONSIVE --- */
+@media(max-width:480px){.stat .n{font-size:20px}.tabs{gap:2px}.tab-btn{padding:5px 9px;font-size:11px}}
 
-      /* --- TIME PICK BUTTON --- */
-      .time-pick-btn {
-        background: var(--bg3);
-        border: 0.5px solid var(--border2);
-        border-radius: var(--rsm);
-        color: var(--text);
-        font-family: inherit;
-        font-size: 13px;
-        padding: 8px 11px;
-        cursor: pointer;
-        white-space: nowrap;
-        min-width: 110px;
-        text-align: center;
-        transition: border-color 0.15s;
-      }
-      .time-pick-btn:hover {
-        border-color: var(--amber);
-      }
-    </style>
-  </head>
-  <body>
-    <!-- LOGIN OVERLAY -->
-    <div id="login-overlay">
-      <div class="login-box">
-        <div class="login-logo">Life <span>OS</span></div>
-        <div class="login-sub">Your personal productivity system</div>
-        <div class="login-field">
-          <label>Username</label>
-          <input
-            type="text"
-            id="login-user"
-            placeholder="Enter username"
-            autocomplete="username"
-            onkeydown="if (event.key === 'Enter') doLogin();"
-          />
-        </div>
-        <div class="login-field">
-          <label>Password</label>
-          <input
-            type="password"
-            id="login-pass"
-            placeholder="Enter password"
-            autocomplete="current-password"
-            onkeydown="if (event.key === 'Enter') doLogin();"
-          />
-        </div>
-        <button class="login-btn" onclick="doLogin()">Sign In</button>
-        <div class="login-err" id="login-err"></div>
+/* --- TIME PICK BUTTON --- */
+.time-pick-btn{background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--rsm);color:var(--text);font-family:inherit;font-size:13px;padding:8px 11px;cursor:pointer;white-space:nowrap;min-width:110px;text-align:center;transition:border-color .15s}
+.time-pick-btn:hover{border-color:var(--amber)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN OVERLAY -->
+<div id="login-overlay">
+  <div class="login-box">
+    <div class="login-logo">Life <span>OS</span></div>
+    <div class="login-sub">Your personal productivity system</div>
+    <div class="login-field">
+      <label>Email</label>
+      <input type="email" id="login-user" placeholder="Enter email" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="login-field">
+      <label>Password</label>
+      <div style="position:relative">
+        <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password" style="padding-right:38px" onkeydown="if(event.key==='Enter')doLogin()">
+        <button type="button" onclick="togglePasswordVisibility()" aria-label="Show password" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text3);padding:4px;display:flex;align-items:center;justify-content:center">
+          <svg id="pw-eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
       </div>
     </div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
 
-    <!-- TIME PICKER MODAL -->
-    <div class="modal-overlay hidden" id="time-modal-overlay">
-      <div class="time-modal">
-        <h3>Select Time Block</h3>
-        <div class="time-picker-row">
-          <div class="time-col">
-            <label>Start Hr</label>
-            <div class="time-scroll" id="ts-sh"></div>
-          </div>
-          <div class="time-col">
-            <label>Start Min</label>
-            <div class="time-scroll" id="ts-sm"></div>
-          </div>
-          <div class="time-col">
-            <label>Start</label>
-            <div class="time-scroll" id="ts-sa"></div>
-          </div>
-          <div class="time-to-sep">→</div>
-          <div class="time-col">
-            <label>End Hr</label>
-            <div class="time-scroll" id="ts-eh"></div>
-          </div>
-          <div class="time-col">
-            <label>End Min</label>
-            <div class="time-scroll" id="ts-em"></div>
-          </div>
-          <div class="time-col">
-            <label>End</label>
-            <div class="time-scroll" id="ts-ea"></div>
-          </div>
-        </div>
-        <div class="time-preview" id="time-preview">--:-- → --:--</div>
-        <div class="time-conflict-warn" id="time-conflict-warn"></div>
-        <div class="time-modal-btns">
-          <button
-            class="btn btn-full"
-            onclick="closeTimePicker()"
-            style="flex: 1"
-          >
-            Cancel
-          </button>
-          <button
-            class="btn btn-amber btn-full"
-            onclick="confirmTimePicker()"
-            style="flex: 1"
-          >
-            Confirm
-          </button>
-        </div>
+<!-- TIME PICKER MODAL -->
+<div class="modal-overlay hidden" id="time-modal-overlay">
+  <div class="time-modal">
+    <h3>Select Time Block</h3>
+    <div class="time-picker-row">
+      <div class="time-col">
+        <label>Start Hr</label>
+        <div class="time-scroll" id="ts-sh"></div>
+      </div>
+      <div class="time-col">
+        <label>Start Min</label>
+        <div class="time-scroll" id="ts-sm"></div>
+      </div>
+      <div class="time-col">
+        <label>Start</label>
+        <div class="time-scroll" id="ts-sa"></div>
+      </div>
+      <div class="time-to-sep">→</div>
+      <div class="time-col">
+        <label>End Hr</label>
+        <div class="time-scroll" id="ts-eh"></div>
+      </div>
+      <div class="time-col">
+        <label>End Min</label>
+        <div class="time-scroll" id="ts-em"></div>
+      </div>
+      <div class="time-col">
+        <label>End</label>
+        <div class="time-scroll" id="ts-ea"></div>
       </div>
     </div>
-
-    <div class="app" id="main-app" style="display: none">
-      <div class="topbar">
-        <div>
-          <h1>Life <span>OS</span></h1>
-          <div
-            style="font-size: 11px; color: var(--text3); margin-top: 1px"
-            id="today-str"
-          ></div>
-        </div>
-        <div
-          style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap"
-        >
-          <span class="sync-badge" id="sync-badge">&#9679; Synced</span>
-          <button class="btn btn-sm btn-red" onclick="doLogout()">
-            Logout
-          </button>
-        </div>
-      </div>
-
-      <div id="payal-bar" class="payal-bar">
-        <div class="payal-avatar">&#128578;</div>
-        <div class="payal-body">
-          <div class="payal-name">Payal - Your Guide</div>
-          <div class="payal-msg" id="payal-msg">
-            Hey! I'm Payal. I'm here every single step with you. What tab are we
-            conquering today?
-          </div>
-        </div>
-      </div>
-
-      <div class="tabs" id="tabs"></div>
-      <div id="panels"></div>
+    <div class="time-preview" id="time-preview">--:-- → --:--</div>
+    <div class="time-conflict-warn" id="time-conflict-warn"></div>
+    <div class="time-modal-btns">
+      <button class="btn btn-full" onclick="closeTimePicker()" style="flex:1">Cancel</button>
+      <button class="btn btn-amber btn-full" onclick="confirmTimePicker()" style="flex:1">Confirm</button>
     </div>
+  </div>
+</div>
 
-    <script>
-      // ============================================================
-      //  SUPABASE CONFIG
-      //  → Replace SUPABASE_URL and SUPABASE_ANON_KEY with your own
-      //  → See the "Supabase Setup" tab inside the app for steps
-      // ============================================================
-      const SUPABASE_URL = "https://bwigelqywhlyhthojnqc.supabase.co/";
-      const SUPABASE_ANON =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3aWdlbHF5d2hseWh0aG9qbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTg1NzMsImV4cCI6MjA5Njk5NDU3M30.6F_LexwOhHClFhW6n8zvimO4YHJhv1emKETAZk8yRlk";
+<div class="app" id="main-app" style="display:none">
 
-      // Hardcoded credentials — only you will use this
-      const ALLOWED_USER = "Mrtuhin"; // Change this to your username
-      const ALLOWED_PASS = "PayalIsLove@1996"; // Change this to your password
+<div class="topbar">
+  <div>
+    <h1>Life <span>OS</span></h1>
+    <div style="font-size:11px;color:var(--text3);margin-top:1px" id="today-str"></div>
+  </div>
+  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+    <span class="sync-badge" id="sync-badge">&#9679; Synced</span>
+    <button class="btn btn-sm btn-red" onclick="doLogout()">Logout</button>
+  </div>
+</div>
 
-      let supabase = null;
-      let SUPABASE_READY = false;
+<div id="payal-bar" class="payal-bar">
+  <div class="payal-avatar">&#128578;</div>
+  <div class="payal-body">
+    <div class="payal-name">Payal - Your Guide</div>
+    <div class="payal-msg" id="payal-msg">Hey! I'm Payal. I'm here every single step with you. What tab are we conquering today?</div>
+  </div>
+</div>
 
-      function initSupabase() {
-        if (SUPABASE_URL === "YOUR_SUPABASE_URL") {
-          console.warn("Supabase not configured — using localStorage fallback");
-          SUPABASE_READY = false;
-          return;
-        }
-        try {
-          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-          SUPABASE_READY = true;
-        } catch (e) {
-          console.error("Supabase init failed:", e);
-          SUPABASE_READY = false;
-        }
-      }
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
 
-      // ============ LOGIN ============
-      const SESSION_KEY = "lifeOS_session";
+</div>
 
-      function doLogin() {
-        const u = document.getElementById("login-user").value.trim();
-        const p = document.getElementById("login-pass").value;
-        const err = document.getElementById("login-err");
-        if (u === ALLOWED_USER && p === ALLOWED_PASS) {
-          sessionStorage.setItem(SESSION_KEY, "1");
-          document.getElementById("login-overlay").classList.add("hidden");
-          document.getElementById("main-app").style.display = "";
-          err.textContent = "";
-          startApp();
-        } else {
-          err.textContent = "Incorrect username or password.";
-          document.getElementById("login-pass").value = "";
-        }
-      }
+<script>
+// ============================================================
+//  SUPABASE CONFIG
+//  → Replace SUPABASE_URL and SUPABASE_ANON_KEY with your own
+//  → See the "Supabase Setup" tab inside the app for steps
+// ============================================================
+const SUPABASE_URL  = 'https://bwigelqywhlyhthojnqc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ3aWdlbHF5d2hseWh0aG9qbnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MTg1NzMsImV4cCI6MjA5Njk5NDU3M30.6F_LexwOhHClFhW6n8zvimO4YHJhv1emKETAZk8yRlk';
 
-      function doLogout() {
-        sessionStorage.removeItem(SESSION_KEY);
-        location.reload();
-      }
+let sb = null;
+let SUPABASE_READY = false;
 
-      function checkSession() {
-        if (sessionStorage.getItem(SESSION_KEY) === "1") {
-          document.getElementById("login-overlay").classList.add("hidden");
-          document.getElementById("main-app").style.display = "";
-          startApp();
-        }
-      }
+function initSupabase() {
+  if (sb) return; // already initialized
+  if (SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+    console.warn('Supabase not configured — using localStorage fallback');
+    SUPABASE_READY = false;
+    return;
+  }
+  try {
+    sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    SUPABASE_READY = true;
+  } catch(e) {
+    console.error('Supabase init failed:', e);
+    SUPABASE_READY = false;
+  }
+}
 
-      // ============ PAYAL MESSAGES ============
-      const PAYAL = {
-        today: [
-          "Focus on your top 3 blocks. The rest is bonus. You don't have to win everything today, just move forward.",
-          "Even ticking ONE block is a win. Start small. Momentum builds itself.",
-          "You showed up today. That's already more than most people. Now let's make it count.",
-          "Pick your hardest task and do 5 minutes of it. Just 5. That's all I'm asking.",
-        ],
-        timer: [
-          "Start the timer. Phone face-down. 25 minutes. That's it. You can do anything for 25 minutes.",
-          "Every Pomodoro you finish is proof that you can focus. Stack the proof.",
-          "The timer isn't your enemy. It's your ally. It gives your brain a finish line to sprint to.",
-        ],
-        process: [
-          "Your process is your autopilot. When your brain is chaotic, your process holds the wheel.",
-          "Tick each step like a ritual. Rituals are how ADHD brains build consistency without willpower.",
-        ],
-        week: [
-          "Every green day on this grid is a vote for the person you are becoming. Vote consistently.",
-          "One win a day. That's 365 pieces of proof by end of year that you are capable.",
-        ],
-        energy: [
-          "Your energy is data, not a verdict. Log it honestly and I'll tell you what to do with it.",
-          "Low energy doesn't mean bad day. It means adjust the game plan. You're still in the game.",
-          "High energy? Don't waste it on small tasks. Attack your biggest goal right now.",
-        ],
-        knowme: [
-          "The most productive thing you can do is understand yourself. These questions aren't soft, they're strategy.",
-          "One question a day. Don't overthink. First answer is usually the truest one.",
-        ],
-        affirmations: [
-          "Add the ones that hit different for you. Delete the ones that feel empty. Make this yours.",
-          "Read one of these every morning before you touch your phone. It rewires the morning.",
-        ],
-        analytics: [
-          "Data doesn't lie. Your graph shows where you're strong and where you're leaking energy. Let's fix the leaks.",
-          "Progress isn't linear for ADHD brains. But the trend over time? That's where you see yourself growing.",
-        ],
-        journal: [
-          "Write without filter here. This is your mind's trash bin and treasure chest at the same time.",
-          "Journaling for 3 minutes is better than not journaling. Don't wait for the perfect moment.",
-        ],
-        gratitude: [
-          "Gratitude isn't soft. It's neurological. It literally rewires your brain to spot wins. Do it daily.",
-          "Even on the worst days, find one thing. One is enough to start.",
-        ],
-        manifest: [
-          "Write it like it already happened. Your brain doesn't know the difference between real and vividly imagined.",
-          "Be specific. Not 'I want success.' Say exactly what success looks like, smells like, feels like.",
-        ],
-        upskill: [
-          "You're not just working a job. You're building a version of yourself that can't be fired. Keep stacking skills.",
-          "Add it, tag it, track it. Every skill you pick up is a brick in your unshakeable foundation.",
-        ],
-        dump: [
-          "Brain dump everything. Get it OUT of your head and onto this page. Your brain is for thinking, not storing.",
-          "Dumping a thought here frees up RAM. Seriously. You'll think clearer after this.",
-        ],
-        myRules: [
-          "Come back here whenever you feel lost. These rules are the operating system under the operating system.",
-          "Your rules aren't restrictions. They're the shortcuts your brain needs to win without burning out.",
-        ],
-        mindset: [
-          "Read this tab whenever you want to quit. And then don't quit.",
-          "You aren't broken. You're wired differently. Different doesn't mean worse. It means you need a different track.",
-        ],
-        suggestions: [
-          "I watch how you're doing and I adjust. The goal isn't perfection. The goal is consistency with self-compassion.",
-          "Here's what I see about you: you want it badly. That's the hardest ingredient to teach. You already have it.",
-        ],
-        setup: [
-          "Set up Supabase once and your data lives in the cloud forever. Free. Any device. Follow the steps.",
-          "The setup takes 5 minutes. After that, every device you open this on will have your full data.",
-        ],
-      };
+// ============ LOGIN ============
+const SESSION_KEY = 'lifeOS_session';
 
-      function getPayalMsg(tab) {
-        const arr = PAYAL[tab] || PAYAL.today;
-        return arr[Math.floor(Math.random() * arr.length)];
-      }
+function togglePasswordVisibility() {
+  const input = document.getElementById('login-pass');
+  const icon = document.getElementById('pw-eye-icon');
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-7-11-7a18.45 18.45 0 0 1 4.06-5.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    input.type = 'password';
+    icon.innerHTML = '<path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
 
-      // ============ STATE / DB ============
-      const DB_KEY = "lifeOS_v2";
-      function loadDB() {
-        try {
-          return JSON.parse(localStorage.getItem(DB_KEY)) || defaultDB();
-        } catch (e) {
-          return defaultDB();
-        }
-      }
-      function saveLocalDB() {
-        localStorage.setItem(DB_KEY, JSON.stringify(DB));
-      }
+// Fallback credentials — only used if Supabase isn't configured (local-only mode)
+const ALLOWED_USER = 'mylifeOS';       // Change this to your username
+const ALLOWED_PASS = 'mypassword123';  // Change this to your password
 
-      async function saveDB() {
-        saveLocalDB();
-        await syncToSupabase();
-      }
+async function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-err');
+  const btn = document.querySelector('.login-btn');
 
-      let syncTimeout = null;
-      function debouncedSave() {
-        saveLocalDB();
-        clearTimeout(syncTimeout);
-        syncTimeout = setTimeout(() => syncToSupabase(), 1500);
-      }
+  if (SUPABASE_READY && sb) {
+    btn.disabled = true; btn.textContent = 'Signing in...';
+    const { data, error } = await sb.auth.signInWithPassword({ email: u, password: p });
+    btn.disabled = false; btn.textContent = 'Sign In';
+    if (error || !data.session) {
+      err.textContent = 'Incorrect email or password.';
+      document.getElementById('login-pass').value = '';
+      return;
+    }
+    document.getElementById('login-overlay').classList.add('hidden');
+    document.getElementById('main-app').style.display = '';
+    err.textContent = '';
+    startApp();
+  } else {
+    // Local-only fallback (no Supabase configured)
+    if (u === ALLOWED_USER && p === ALLOWED_PASS) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      document.getElementById('login-overlay').classList.add('hidden');
+      document.getElementById('main-app').style.display = '';
+      err.textContent = '';
+      startApp();
+    } else {
+      err.textContent = 'Incorrect username or password.';
+      document.getElementById('login-pass').value = '';
+    }
+  }
+}
 
-      function setSyncBadge(state) {
-        const b = document.getElementById("sync-badge");
-        if (!b) return;
-        if (state === "synced") {
-          b.className = "sync-badge";
-          b.innerHTML = "&#9679; Synced";
-        } else if (state === "syncing") {
-          b.className = "sync-badge syncing";
-          b.innerHTML = "&#9679; Syncing...";
-        } else if (state === "local") {
-          b.className = "sync-badge err";
-          b.innerHTML = "&#9679; Local only";
-        } else if (state === "offline") {
-          b.className = "sync-badge err";
-          b.innerHTML = "&#9679; Offline";
-        }
-      }
+async function doLogout() {
+  if (SUPABASE_READY && sb) {
+    await sb.auth.signOut();
+  }
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
 
-      async function syncToSupabase() {
-        if (!SUPABASE_READY || !supabase) {
-          setSyncBadge("local");
-          return;
-        }
-        setSyncBadge("syncing");
-        try {
-          const payload = {
-            user_id: ALLOWED_USER,
-            data: JSON.stringify(DB),
-            updated_at: new Date().toISOString(),
-          };
-          const { error } = await supabase
-            .from("lifeOS_data")
-            .upsert(payload, { onConflict: "user_id" });
-          if (error) throw error;
-          setSyncBadge("synced");
-        } catch (e) {
-          console.error("Sync error:", e);
-          setSyncBadge("offline");
-        }
-      }
+async function checkSession() {
+  initSupabase();
+  if (SUPABASE_READY && sb) {
+    const { data } = await sb.auth.getSession();
+    if (data && data.session) {
+      document.getElementById('login-overlay').classList.add('hidden');
+      document.getElementById('main-app').style.display = '';
+      startApp();
+    }
+  } else if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    document.getElementById('login-overlay').classList.add('hidden');
+    document.getElementById('main-app').style.display = '';
+    startApp();
+  }
+}
 
-      async function loadFromSupabase() {
-        if (!SUPABASE_READY || !supabase) {
-          setSyncBadge("local");
-          return false;
-        }
-        setSyncBadge("syncing");
-        try {
-          const { data, error } = await supabase
-            .from("lifeOS_data")
-            .select("data")
-            .eq("user_id", ALLOWED_USER)
-            .single();
-          if (error && error.code !== "PGRST116") throw error;
-          if (data && data.data) {
-            const remote = JSON.parse(data.data);
-            DB = { ...defaultDB(), ...remote };
-            saveLocalDB();
-            setSyncBadge("synced");
-            return true;
-          }
-          setSyncBadge("synced");
-          return false;
-        } catch (e) {
-          console.error("Load error:", e);
-          setSyncBadge("offline");
-          return false;
-        }
-      }
+// ============ PAYAL MESSAGES ============
+const PAYAL = {
+  today:   ["Focus on your top 3 blocks. The rest is bonus. You don't have to win everything today, just move forward.", "Even ticking ONE block is a win. Start small. Momentum builds itself.", "You showed up today. That's already more than most people. Now let's make it count.", "Pick your hardest task and do 5 minutes of it. Just 5. That's all I'm asking."],
+  timer:   ["Start the timer. Phone face-down. 25 minutes. That's it. You can do anything for 25 minutes.", "Every Pomodoro you finish is proof that you can focus. Stack the proof.", "The timer isn't your enemy. It's your ally. It gives your brain a finish line to sprint to."],
+  process: ["Your process is your autopilot. When your brain is chaotic, your process holds the wheel.", "Tick each step like a ritual. Rituals are how ADHD brains build consistency without willpower."],
+  week:    ["Every green day on this grid is a vote for the person you are becoming. Vote consistently.", "One win a day. That's 365 pieces of proof by end of year that you are capable."],
+  energy:  ["Your energy is data, not a verdict. Log it honestly and I'll tell you what to do with it.", "Low energy doesn't mean bad day. It means adjust the game plan. You're still in the game.", "High energy? Don't waste it on small tasks. Attack your biggest goal right now."],
+  knowme:  ["The most productive thing you can do is understand yourself. These questions aren't soft, they're strategy.", "One question a day. Don't overthink. First answer is usually the truest one."],
+  affirmations: ["Add the ones that hit different for you. Delete the ones that feel empty. Make this yours.", "Read one of these every morning before you touch your phone. It rewires the morning."],
+  analytics: ["Data doesn't lie. Your graph shows where you're strong and where you're leaking energy. Let's fix the leaks.", "Progress isn't linear for ADHD brains. But the trend over time? That's where you see yourself growing."],
+  journal: ["Write without filter here. This is your mind's trash bin and treasure chest at the same time.", "Journaling for 3 minutes is better than not journaling. Don't wait for the perfect moment."],
+  gratitude: ["Gratitude isn't soft. It's neurological. It literally rewires your brain to spot wins. Do it daily.", "Even on the worst days, find one thing. One is enough to start."],
+  manifest: ["Write it like it already happened. Your brain doesn't know the difference between real and vividly imagined.", "Be specific. Not 'I want success.' Say exactly what success looks like, smells like, feels like."],
+  upskill: ["You're not just working a job. You're building a version of yourself that can't be fired. Keep stacking skills.", "Add it, tag it, track it. Every skill you pick up is a brick in your unshakeable foundation."],
+  dump:    ["Brain dump everything. Get it OUT of your head and onto this page. Your brain is for thinking, not storing.", "Dumping a thought here frees up RAM. Seriously. You'll think clearer after this."],
+  myRules: ["Come back here whenever you feel lost. These rules are the operating system under the operating system.", "Your rules aren't restrictions. They're the shortcuts your brain needs to win without burning out."],
+  mindset: ["Read this tab whenever you want to quit. And then don't quit.", "You aren't broken. You're wired differently. Different doesn't mean worse. It means you need a different track."],
+  suggestions: ["I watch how you're doing and I adjust. The goal isn't perfection. The goal is consistency with self-compassion.", "Here's what I see about you: you want it badly. That's the hardest ingredient to teach. You already have it."],
+  setup:   ["Set up Supabase once and your data lives in the cloud forever. Free. Any device. Follow the steps.", "The setup takes 5 minutes. After that, every device you open this on will have your full data."]
+};
 
-      function defaultDB() {
-        return {
-          blocks: [
-            {
-              id: 1,
-              time: "5:30 AM-6:00 AM",
-              task: "Wake up + hydrate, no phone",
-              tag: "r",
-              prio: "m",
-              done: false,
-              date: "",
-            },
-            {
-              id: 2,
-              time: "6:00 AM-6:30 AM",
-              task: "Kettlebell workout",
-              tag: "h",
-              prio: "xh",
-              done: false,
-              date: "",
-            },
-            {
-              id: 3,
-              time: "6:30 AM-6:50 AM",
-              task: "Stretch + mobility",
-              tag: "h",
-              prio: "h",
-              done: false,
-              date: "",
-            },
-            {
-              id: 4,
-              time: "6:50 AM-7:30 AM",
-              task: "Get ready + breakfast",
-              tag: "r",
-              prio: "m",
-              done: false,
-              date: "",
-            },
-            {
-              id: 5,
-              time: "9:00 AM-1:00 PM",
-              task: "Deep work - job block 1",
-              tag: "w",
-              prio: "xh",
-              done: false,
-              date: "",
-            },
-            {
-              id: 6,
-              time: "1:00 PM-1:30 PM",
-              task: "Lunch - real rest, no scrolling",
-              tag: "r",
-              prio: "h",
-              done: false,
-              date: "",
-            },
-            {
-              id: 7,
-              time: "1:30 PM-5:00 PM",
-              task: "Deep work - job block 2",
-              tag: "w",
-              prio: "xh",
-              done: false,
-              date: "",
-            },
-            {
-              id: 8,
-              time: "5:00 PM-5:30 PM",
-              task: "E-commerce sprint",
-              tag: "s",
-              prio: "h",
-              done: false,
-              date: "",
-            },
-            {
-              id: 9,
-              time: "6:30 PM-7:30 PM",
-              task: "Vocal music practice",
-              tag: "m",
-              prio: "xh",
-              done: false,
-              date: "",
-            },
-            {
-              id: 10,
-              time: "8:00 PM-8:30 PM",
-              task: "Girlfriend time - phone off",
-              tag: "l",
-              prio: "h",
-              done: false,
-              date: "",
-            },
-            {
-              id: 11,
-              time: "8:30 PM-9:00 PM",
-              task: "Social media (Mon/Wed/Fri)",
-              tag: "s",
-              prio: "l",
-              done: false,
-              date: "",
-            },
-            {
-              id: 12,
-              time: "9:00 PM-9:15 PM",
-              task: "Wind down - write 1 win",
-              tag: "r",
-              prio: "m",
-              done: false,
-              date: "",
-            },
-          ],
-          blocksNextId: 13,
-          prevBlocks: [],
-          procs: [
-            {
-              id: 1,
-              text: "Set your top 3 priorities for the day",
-              done: false,
-            },
-            {
-              id: 2,
-              text: "Block notifications during focus sessions",
-              done: false,
-            },
-            {
-              id: 3,
-              text: "Start with the smallest action first",
-              done: false,
-            },
-            {
-              id: 4,
-              text: "Take a 5-min break between each block",
-              done: false,
-            },
-            { id: 5, text: "Check energy level mid-day", done: false },
-            { id: 6, text: "Log one win before bed", done: false },
-          ],
-          procsNextId: 7,
-          wins: [],
-          winsNextId: 1,
-          energyLog: [],
-          energyNextId: 1,
-          affs: [
-            {
-              id: 1,
-              text: "You are not broken. Your brain just runs differently, and that is your edge.",
-            },
-            {
-              id: 2,
-              text: "Showing up today, even at 60%, is still showing up. That counts.",
-            },
-            {
-              id: 3,
-              text: "Exhaustion is not failure. It is proof you have been trying hard.",
-            },
-            {
-              id: 4,
-              text: "Your goals are patient. Keep moving, one block at a time.",
-            },
-            {
-              id: 5,
-              text: "Confidence is not a feeling. It is a record. Every time you show up, you add to yours.",
-            },
-          ],
-          affsNextId: 6,
-          journal: [],
-          journalNextId: 1,
-          gratitude: [],
-          gratitudeNextId: 1,
-          manifest: [],
-          manifestNextId: 1,
-          upskill: [],
-          upskillNextId: 1,
-          dump: [],
-          dumpNextId: 1,
-          know: {},
-          weekDays: new Array(7).fill(false),
-          weekScores: new Array(7).fill(0),
-          timer: { mode: "focus", running: false, elapsed: 0 },
-          timerModes: { focus: 25 * 60, short: 5 * 60, long: 15 * 60 },
-          today: todayStr(),
-          suggestions: [],
-        };
-      }
+function getPayalMsg(tab) {
+  const arr = PAYAL[tab] || PAYAL.today;
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
-      function todayStr() {
-        return new Date().toISOString().split("T")[0];
-      }
+// ============ STATE / DB ============
+const DB_KEY = 'lifeOS_v2';
+function loadDB() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || defaultDB(); }
+  catch(e) { return defaultDB(); }
+}
+function saveLocalDB() { localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
 
-      let DB = loadDB();
+async function saveDB() {
+  saveLocalDB();
+  await syncToSupabase();
+}
 
-      // ---- Daily reset check ----
-      function checkDailyReset() {
-        const t = todayStr();
-        if (DB.today !== t) {
-          DB.prevBlocks = DB.blocks.map((b) => ({
-            ...b,
-            archiveDate: DB.today,
-          }));
-          DB.blocks.forEach((b) => {
-            b.done = false;
-          });
-          DB.procs.forEach((p) => {
-            p.done = false;
-          });
-          DB.weekDays = new Array(7).fill(false);
-          DB.weekScores = new Array(7).fill(0);
-          DB.today = t;
-          saveLocalDB();
-        }
-      }
+let syncTimeout = null;
+function debouncedSave() {
+  saveLocalDB();
+  clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(() => syncToSupabase(), 1500);
+}
 
-      let timerInterval = null;
+function setSyncBadge(state) {
+  const b = document.getElementById('sync-badge');
+  if (!b) return;
+  if (state === 'synced') { b.className='sync-badge'; b.innerHTML='&#9679; Synced'; }
+  else if (state === 'syncing') { b.className='sync-badge syncing'; b.innerHTML='&#9679; Syncing...'; }
+  else if (state === 'local') { b.className='sync-badge err'; b.innerHTML='&#9679; Local only'; }
+  else if (state === 'offline') { b.className='sync-badge err'; b.innerHTML='&#9679; Offline'; }
+}
 
-      // ============ TIME PICKER ============
-      let tpResolve = null;
-      let tpCurrent = { sh: 6, sm: 0, sa: "AM", eh: 7, em: 0, ea: "AM" };
+async function syncToSupabase() {
+  if (!SUPABASE_READY || !sb) { setSyncBadge('local'); return; }
+  setSyncBadge('syncing');
+  try {
+    const { data: userData, error: userErr } = await sb.auth.getUser();
+    if (userErr || !userData.user) throw userErr || new Error('Not signed in');
+    const payload = { user_id: userData.user.id, data: JSON.stringify(DB), updated_at: new Date().toISOString() };
+    const { error } = await sb.from('lifeOS_data').upsert(payload, { onConflict: 'user_id' });
+    if (error) throw error;
+    setSyncBadge('synced');
+  } catch(e) {
+    console.error('Sync error:', e);
+    setSyncBadge('offline');
+  }
+}
 
-      function timeToMinutes(h, m, ampm) {
-        let hour = parseInt(h);
-        if (ampm === "AM" && hour === 12) hour = 0;
-        if (ampm === "PM" && hour !== 12) hour += 12;
-        return hour * 60 + parseInt(m);
-      }
+async function loadFromSupabase() {
+  if (!SUPABASE_READY || !sb) { setSyncBadge('local'); return false; }
+  setSyncBadge('syncing');
+  try {
+    const { data: userData, error: userErr } = await sb.auth.getUser();
+    if (userErr || !userData.user) throw userErr || new Error('Not signed in');
+    const { data, error } = await sb.from('lifeOS_data').select('data').eq('user_id', userData.user.id).single();
+    if (error && error.code !== 'PGRST116') throw error;
+    if (data && data.data) {
+      const remote = JSON.parse(data.data);
+      DB = { ...defaultDB(), ...remote };
+      saveLocalDB();
+      setSyncBadge('synced');
+      return true;
+    }
+    setSyncBadge('synced');
+    return false;
+  } catch(e) {
+    console.error('Load error:', e);
+    setSyncBadge('offline');
+    return false;
+  }
+}
 
-      function minutesToTime(mins) {
-        let h = Math.floor(mins / 60) % 24;
-        const m = mins % 60;
-        const ampm = h >= 12 ? "PM" : "AM";
-        if (h === 0) h = 12;
-        else if (h > 12) h -= 12;
-        return `${h}:${String(m).padStart(2, "0")} ${ampm}`;
-      }
+function defaultDB() {
+  return {
+    blocks: [
+      {id:1,time:'5:30 AM-6:00 AM',task:'Wake up + hydrate, no phone',tag:'r',prio:'m',done:false,date:''},
+      {id:2,time:'6:00 AM-6:30 AM',task:'Kettlebell workout',tag:'h',prio:'xh',done:false,date:''},
+      {id:3,time:'6:30 AM-6:50 AM',task:'Stretch + mobility',tag:'h',prio:'h',done:false,date:''},
+      {id:4,time:'6:50 AM-7:30 AM',task:'Get ready + breakfast',tag:'r',prio:'m',done:false,date:''},
+      {id:5,time:'9:00 AM-1:00 PM',task:'Deep work - job block 1',tag:'w',prio:'xh',done:false,date:''},
+      {id:6,time:'1:00 PM-1:30 PM',task:'Lunch - real rest, no scrolling',tag:'r',prio:'h',done:false,date:''},
+      {id:7,time:'1:30 PM-5:00 PM',task:'Deep work - job block 2',tag:'w',prio:'xh',done:false,date:''},
+      {id:8,time:'5:00 PM-5:30 PM',task:'E-commerce sprint',tag:'s',prio:'h',done:false,date:''},
+      {id:9,time:'6:30 PM-7:30 PM',task:'Vocal music practice',tag:'m',prio:'xh',done:false,date:''},
+      {id:10,time:'8:00 PM-8:30 PM',task:'Girlfriend time - phone off',tag:'l',prio:'h',done:false,date:''},
+      {id:11,time:'8:30 PM-9:00 PM',task:'Social media (Mon/Wed/Fri)',tag:'s',prio:'l',done:false,date:''},
+      {id:12,time:'9:00 PM-9:15 PM',task:'Wind down - write 1 win',tag:'r',prio:'m',done:false,date:''},
+    ],
+    blocksNextId: 13,
+    prevBlocks: [],
+    procs: [
+      {id:1,text:'Set your top 3 priorities for the day',done:false},
+      {id:2,text:'Block notifications during focus sessions',done:false},
+      {id:3,text:'Start with the smallest action first',done:false},
+      {id:4,text:'Take a 5-min break between each block',done:false},
+      {id:5,text:'Check energy level mid-day',done:false},
+      {id:6,text:'Log one win before bed',done:false},
+    ],
+    procsNextId: 7,
+    wins: [],
+    winsNextId: 1,
+    energyLog: [],
+    energyNextId: 1,
+    affs: [
+      {id:1,text:'You are not broken. Your brain just runs differently, and that is your edge.'},
+      {id:2,text:'Showing up today, even at 60%, is still showing up. That counts.'},
+      {id:3,text:'Exhaustion is not failure. It is proof you have been trying hard.'},
+      {id:4,text:'Your goals are patient. Keep moving, one block at a time.'},
+      {id:5,text:'Confidence is not a feeling. It is a record. Every time you show up, you add to yours.'},
+    ],
+    affsNextId: 6,
+    journal: [],
+    journalNextId: 1,
+    gratitude: [],
+    gratitudeNextId: 1,
+    manifest: [],
+    manifestNextId: 1,
+    upskill: [],
+    upskillNextId: 1,
+    dump: [],
+    dumpNextId: 1,
+    know: {},
+    weekDays: new Array(7).fill(false),
+    weekScores: new Array(7).fill(0),
+    timer: {mode:'focus',running:false,elapsed:0},
+    timerModes: {focus:25*60,short:5*60,long:15*60},
+    today: todayStr(),
+    suggestions: []
+  };
+}
 
-      function timeStrToMins(str) {
-        // Parse "6:30 AM" or "6:30AM" etc.
-        if (!str || str === "--") return -1;
-        const m = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
-        if (!m) return -1;
-        return timeToMinutes(m[1], m[2], m[3].toUpperCase());
-      }
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
 
-      function blockStartMins(block) {
-        if (!block.time || block.time === "--") return -1;
-        const parts = block.time.split("-");
-        return timeStrToMins(parts[0].trim());
-      }
+let DB = loadDB();
 
-      function blockEndMins(block) {
-        if (!block.time || block.time === "--") return -1;
-        const parts = block.time.split("-");
-        if (parts.length < 2) return -1;
-        return timeStrToMins(parts[1].trim());
-      }
+// ---- Daily reset check ----
+function checkDailyReset() {
+  const t = todayStr();
+  if (DB.today !== t) {
+    DB.prevBlocks = DB.blocks.map(b => ({...b, archiveDate: DB.today}));
+    DB.blocks.forEach(b => { b.done = false; });
+    DB.procs.forEach(p => { p.done = false; });
+    DB.weekDays = new Array(7).fill(false);
+    DB.weekScores = new Array(7).fill(0);
+    DB.today = t;
+    saveLocalDB();
+  }
+}
 
-      function checkOverlap(startMins, endMins, excludeId = null) {
-        for (const b of DB.blocks) {
-          if (excludeId !== null && b.id === excludeId) continue;
-          if (!b.time || b.time === "--") continue;
-          const bs = blockStartMins(b);
-          const be = blockEndMins(b);
-          if (bs < 0 || be < 0) continue;
-          // Overlap if start < other_end AND end > other_start
-          if (startMins < be && endMins > bs) {
-            return b;
-          }
-        }
-        return null;
-      }
+let timerInterval = null;
 
-      function buildScrollList(el, items, selected, onChange) {
-        el.innerHTML = "";
-        items.forEach((item) => {
-          const div = document.createElement("div");
-          div.className =
-            "time-item" + (String(item) === String(selected) ? " sel" : "");
-          div.textContent = item;
-          div.onclick = () => {
-            el.querySelectorAll(".time-item").forEach((d) =>
-              d.classList.remove("sel"),
-            );
-            div.classList.add("sel");
-            onChange(item);
-            updateTimePreview();
-          };
-          el.appendChild(div);
-        });
-        // Auto scroll to selected
-        const sel = el.querySelector(".sel");
-        if (sel)
-          setTimeout(
-            () => sel.scrollIntoView({ block: "center", behavior: "smooth" }),
-            50,
-          );
-      }
+// ============ TIME PICKER ============
+let tpResolve = null;
+let tpCurrent = { sh:6, sm:0, sa:'AM', eh:7, em:0, ea:'AM' };
 
-      function updateTimePreview() {
-        const p = document.getElementById("time-preview");
-        const w = document.getElementById("time-conflict-warn");
-        const startMins = timeToMinutes(
-          tpCurrent.sh,
-          tpCurrent.sm,
-          tpCurrent.sa,
-        );
-        const endMins = timeToMinutes(tpCurrent.eh, tpCurrent.em, tpCurrent.ea);
-        const startStr = minutesToTime(startMins);
-        const endStr = minutesToTime(endMins);
-        p.textContent = startStr + " → " + endStr;
-        if (endMins <= startMins) {
-          w.textContent = "⚠ End time must be after start time";
-          return;
-        }
-        const conflict = checkOverlap(startMins, endMins, tpExcludeId);
-        if (conflict) {
-          const cs = conflict.time || "";
-          w.textContent = `⚠ Overlaps with: "${conflict.task}" (${cs})`;
-        } else {
-          w.textContent = "";
-        }
-      }
+function timeToMinutes(h, m, ampm) {
+  let hour = parseInt(h);
+  if (ampm === 'AM' && hour === 12) hour = 0;
+  if (ampm === 'PM' && hour !== 12) hour += 12;
+  return hour * 60 + parseInt(m);
+}
 
-      let tpExcludeId = null;
+function minutesToTime(mins) {
+  let h = Math.floor(mins / 60) % 24;
+  const m = mins % 60;
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  if (h === 0) h = 12;
+  else if (h > 12) h -= 12;
+  return `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+}
 
-      function openTimePicker(defaultStart, defaultEnd, excludeId) {
-        tpExcludeId = excludeId || null;
-        // Parse defaults
-        function parseT(str) {
-          const m = str && str.match(/(\d+):(\d+)\s*(AM|PM)/i);
-          if (m)
-            return {
-              h: parseInt(m[1]),
-              m: parseInt(m[2]),
-              a: m[3].toUpperCase(),
-            };
-          return { h: 6, m: 0, a: "AM" };
-        }
-        const ps = parseT(defaultStart);
-        const pe = parseT(defaultEnd);
-        tpCurrent = {
-          sh: ps.h,
-          sm: ps.m,
-          sa: ps.a,
-          eh: pe.h,
-          em: pe.m,
-          ea: pe.a,
-        };
+function timeStrToMins(str) {
+  // Parse "6:30 AM" or "6:30AM" etc.
+  if (!str || str === '--') return -1;
+  const m = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!m) return -1;
+  return timeToMinutes(m[1], m[2], m[3].toUpperCase());
+}
 
-        const hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-        const minutes = ["00", "15", "30", "45"];
-        const ampm = ["AM", "PM"];
+function blockStartMins(block) {
+  if (!block.time || block.time === '--') return -1;
+  const parts = block.time.split('-');
+  return timeStrToMins(parts[0].trim());
+}
 
-        buildScrollList(
-          document.getElementById("ts-sh"),
-          hours,
-          tpCurrent.sh,
-          (v) => (tpCurrent.sh = parseInt(v)),
-        );
-        buildScrollList(
-          document.getElementById("ts-sm"),
-          minutes,
-          String(tpCurrent.sm).padStart(2, "0"),
-          (v) => (tpCurrent.sm = parseInt(v)),
-        );
-        buildScrollList(
-          document.getElementById("ts-sa"),
-          ampm,
-          tpCurrent.sa,
-          (v) => (tpCurrent.sa = v),
-        );
-        buildScrollList(
-          document.getElementById("ts-eh"),
-          hours,
-          tpCurrent.eh,
-          (v) => (tpCurrent.eh = parseInt(v)),
-        );
-        buildScrollList(
-          document.getElementById("ts-em"),
-          minutes,
-          String(tpCurrent.em).padStart(2, "0"),
-          (v) => (tpCurrent.em = parseInt(v)),
-        );
-        buildScrollList(
-          document.getElementById("ts-ea"),
-          ampm,
-          tpCurrent.ea,
-          (v) => (tpCurrent.ea = v),
-        );
+function blockEndMins(block) {
+  if (!block.time || block.time === '--') return -1;
+  const parts = block.time.split('-');
+  if (parts.length < 2) return -1;
+  return timeStrToMins(parts[1].trim());
+}
 
-        updateTimePreview();
-        document
-          .getElementById("time-modal-overlay")
-          .classList.remove("hidden");
+function checkOverlap(startMins, endMins, excludeId = null) {
+  for (const b of DB.blocks) {
+    if (excludeId !== null && b.id === excludeId) continue;
+    if (!b.time || b.time === '--') continue;
+    const bs = blockStartMins(b);
+    const be = blockEndMins(b);
+    if (bs < 0 || be < 0) continue;
+    // Overlap if start < other_end AND end > other_start
+    if (startMins < be && endMins > bs) {
+      return b;
+    }
+  }
+  return null;
+}
 
-        return new Promise((resolve) => {
-          tpResolve = resolve;
-        });
-      }
+function buildScrollList(el, items, selected, onChange) {
+  el.innerHTML = '';
+  items.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'time-item' + (String(item) === String(selected) ? ' sel' : '');
+    div.textContent = item;
+    div.onclick = () => {
+      el.querySelectorAll('.time-item').forEach(d => d.classList.remove('sel'));
+      div.classList.add('sel');
+      onChange(item);
+      updateTimePreview();
+    };
+    el.appendChild(div);
+  });
+  // Auto scroll to selected
+  const sel = el.querySelector('.sel');
+  if (sel) setTimeout(() => sel.scrollIntoView({block:'center', behavior:'smooth'}), 50);
+}
 
-      function closeTimePicker() {
-        document.getElementById("time-modal-overlay").classList.add("hidden");
-        if (tpResolve) {
-          tpResolve(null);
-          tpResolve = null;
-        }
-      }
+function updateTimePreview() {
+  const p = document.getElementById('time-preview');
+  const w = document.getElementById('time-conflict-warn');
+  const startMins = timeToMinutes(tpCurrent.sh, tpCurrent.sm, tpCurrent.sa);
+  const endMins   = timeToMinutes(tpCurrent.eh, tpCurrent.em, tpCurrent.ea);
+  const startStr  = minutesToTime(startMins);
+  const endStr    = minutesToTime(endMins);
+  p.textContent = startStr + ' → ' + endStr;
+  if (endMins <= startMins) {
+    w.textContent = '⚠ End time must be after start time';
+    return;
+  }
+  const conflict = checkOverlap(startMins, endMins, tpExcludeId);
+  if (conflict) {
+    const cs = conflict.time || '';
+    w.textContent = `⚠ Overlaps with: "${conflict.task}" (${cs})`;
+  } else {
+    w.textContent = '';
+  }
+}
 
-      function confirmTimePicker() {
-        const startMins = timeToMinutes(
-          tpCurrent.sh,
-          tpCurrent.sm,
-          tpCurrent.sa,
-        );
-        const endMins = timeToMinutes(tpCurrent.eh, tpCurrent.em, tpCurrent.ea);
-        if (endMins <= startMins) {
-          document.getElementById("time-conflict-warn").textContent =
-            "⚠ End time must be after start time!";
-          return;
-        }
-        const conflict = checkOverlap(startMins, endMins, tpExcludeId);
-        if (conflict) {
-          document.getElementById("time-conflict-warn").textContent =
-            `⚠ Please fix overlap with "${conflict.task}" before confirming.`;
-          return;
-        }
-        const startStr = minutesToTime(startMins);
-        const endStr = minutesToTime(endMins);
-        const result = startStr + "-" + endStr;
-        document.getElementById("time-modal-overlay").classList.add("hidden");
-        if (tpResolve) {
-          tpResolve(result);
-          tpResolve = null;
-        }
-      }
+let tpExcludeId = null;
 
-      // ============ TABS ============
-      const TABS = [
-        { key: "today", label: "Today" },
-        { key: "timer", label: "Timer" },
-        { key: "process", label: "Process" },
-        { key: "analytics", label: "Analytics" },
-        { key: "week", label: "Week" },
-        { key: "energy", label: "Energy" },
-        { key: "journal", label: "Journal" },
-        { key: "gratitude", label: "Gratitude" },
-        { key: "manifest", label: "Manifest" },
-        { key: "knowme", label: "Know Me" },
-        { key: "affirmations", label: "Affirmations" },
-        { key: "upskill", label: "Upskill" },
-        { key: "dump", label: "Brain Dump" },
-        { key: "suggestions", label: "Payal Suggests" },
-        { key: "myRules", label: "My Rules" },
-        { key: "mindset", label: "Mindset" },
-        { key: "setup", label: "⚙ Supabase Setup" },
-      ];
+function openTimePicker(defaultStart, defaultEnd, excludeId) {
+  tpExcludeId = excludeId || null;
+  // Parse defaults
+  function parseT(str) {
+    const m = str && str.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (m) return { h: parseInt(m[1]), m: parseInt(m[2]), a: m[3].toUpperCase() };
+    return { h: 6, m: 0, a: 'AM' };
+  }
+  const ps = parseT(defaultStart);
+  const pe = parseT(defaultEnd);
+  tpCurrent = { sh: ps.h, sm: ps.m, sa: ps.a, eh: pe.h, em: pe.m, ea: pe.a };
 
-      let activeTab = 0;
+  const hours   = [12,1,2,3,4,5,6,7,8,9,10,11];
+  const minutes = ['00','15','30','45'];
+  const ampm    = ['AM','PM'];
 
-      function switchTab(i) {
-        activeTab = i;
-        document
-          .querySelectorAll(".tab-btn")
-          .forEach((b, j) => b.classList.toggle("on", j === i));
-        document
-          .querySelectorAll(".pnl")
-          .forEach((p, j) => p.classList.toggle("on", j === i));
-        const key = TABS[i].key;
-        document.getElementById("payal-msg").textContent = getPayalMsg(key);
-        buildPanel(key, i);
-      }
+  buildScrollList(document.getElementById('ts-sh'), hours, tpCurrent.sh, v => tpCurrent.sh = parseInt(v));
+  buildScrollList(document.getElementById('ts-sm'), minutes, String(tpCurrent.sm).padStart(2,'0'), v => tpCurrent.sm = parseInt(v));
+  buildScrollList(document.getElementById('ts-sa'), ampm, tpCurrent.sa, v => tpCurrent.sa = v);
+  buildScrollList(document.getElementById('ts-eh'), hours, tpCurrent.eh, v => tpCurrent.eh = parseInt(v));
+  buildScrollList(document.getElementById('ts-em'), minutes, String(tpCurrent.em).padStart(2,'0'), v => tpCurrent.em = parseInt(v));
+  buildScrollList(document.getElementById('ts-ea'), ampm, tpCurrent.ea, v => tpCurrent.ea = v);
 
-      function renderTabs() {
-        document.getElementById("tabs").innerHTML = TABS.map(
-          (t, i) =>
-            `<button class="tab-btn${i === activeTab ? " on" : ""}" onclick="switchTab(${i})">${t.label}</button>`,
-        ).join("");
-      }
+  updateTimePreview();
+  document.getElementById('time-modal-overlay').classList.remove('hidden');
 
-      function renderPanels() {
-        const el = document.getElementById("panels");
-        el.innerHTML = "";
-        TABS.forEach((_, i) => {
-          const d = document.createElement("div");
-          d.className = "pnl" + (i === activeTab ? " on" : "");
-          d.id = "pnl" + i;
-          el.appendChild(d);
-        });
-        buildPanel(TABS[activeTab].key, activeTab);
-      }
+  return new Promise(resolve => { tpResolve = resolve; });
+}
 
-      function buildPanel(key, idx) {
-        const map = {
-          today: buildToday,
-          timer: buildTimer,
-          process: buildProcess,
-          analytics: buildAnalytics,
-          week: buildWeek,
-          energy: buildEnergy,
-          journal: buildJournal,
-          gratitude: buildGratitude,
-          manifest: buildManifest,
-          knowme: buildKnow,
-          affirmations: buildAff,
-          upskill: buildUpskill,
-          dump: buildDump,
-          suggestions: buildSuggestions,
-          myRules: buildRules,
-          mindset: buildMindset,
-          setup: buildSetup,
-        };
-        if (map[key]) map[key](idx);
-      }
+function closeTimePicker() {
+  document.getElementById('time-modal-overlay').classList.add('hidden');
+  if (tpResolve) { tpResolve(null); tpResolve = null; }
+}
 
-      // ============ HELPERS ============
-      const TAG_MAP = { h: "ch", w: "cw", m: "cm", s: "cs", l: "cl", r: "cr" };
-      const TAG_LABEL = {
-        h: "Health",
-        w: "Work",
-        m: "Music",
-        s: "Side hustle",
-        l: "Love",
-        r: "Rest",
-      };
-      const TAG_OPTS = ["h", "w", "m", "s", "l", "r"];
-      const PRIO_CHIP = {
-        xh: "prio-xh",
-        h: "prio-h",
-        m: "prio-m",
-        l: "prio-l",
-      };
-      const PRIO_LABEL = { xh: "Extreme", h: "High", m: "Medium", l: "Low" };
-      const PRIO_OPTS = ["xh", "h", "m", "l"];
+function confirmTimePicker() {
+  const startMins = timeToMinutes(tpCurrent.sh, tpCurrent.sm, tpCurrent.sa);
+  const endMins   = timeToMinutes(tpCurrent.eh, tpCurrent.em, tpCurrent.ea);
+  if (endMins <= startMins) {
+    document.getElementById('time-conflict-warn').textContent = '⚠ End time must be after start time!';
+    return;
+  }
+  const conflict = checkOverlap(startMins, endMins, tpExcludeId);
+  if (conflict) {
+    document.getElementById('time-conflict-warn').textContent = `⚠ Please fix overlap with "${conflict.task}" before confirming.`;
+    return;
+  }
+  const startStr = minutesToTime(startMins);
+  const endStr   = minutesToTime(endMins);
+  const result   = startStr + '-' + endStr;
+  document.getElementById('time-modal-overlay').classList.add('hidden');
+  if (tpResolve) { tpResolve(result); tpResolve = null; }
+}
 
-      function fmt(s) {
-        let m = Math.floor(s / 60),
-          sec = s % 60;
-        return String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
-      }
+// ============ TABS ============
+const TABS = [
+  {key:'today',label:'Today'},
+  {key:'timer',label:'Timer'},
+  {key:'process',label:'Process'},
+  {key:'analytics',label:'Analytics'},
+  {key:'week',label:'Week'},
+  {key:'energy',label:'Energy'},
+  {key:'journal',label:'Journal'},
+  {key:'gratitude',label:'Gratitude'},
+  {key:'manifest',label:'Manifest'},
+  {key:'knowme',label:'Know Me'},
+  {key:'affirmations',label:'Affirmations'},
+  {key:'upskill',label:'Upskill'},
+  {key:'dump',label:'Brain Dump'},
+  {key:'suggestions',label:'Payal Suggests'},
+  {key:'myRules',label:'My Rules'},
+  {key:'mindset',label:'Mindset'},
+  {key:'setup',label:'⚙ Supabase Setup'},
+];
 
-      function svgCheck() {
-        return `<svg viewBox="0 0 12 12"><polyline points="1.5,6 5,9.5 10.5,2.5"/></svg>`;
-      }
+let activeTab = 0;
 
-      function escHtml(s) {
-        return String(s)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;");
-      }
+function switchTab(i) {
+  activeTab = i;
+  document.querySelectorAll('.tab-btn').forEach((b,j) => b.classList.toggle('on', j===i));
+  document.querySelectorAll('.pnl').forEach((p,j) => p.classList.toggle('on', j===i));
+  const key = TABS[i].key;
+  document.getElementById('payal-msg').textContent = getPayalMsg(key);
+  buildPanel(key, i);
+}
 
-      // ============ TODAY ============
-      function doneCnt() {
-        return DB.blocks.filter((b) => b.done).length;
-      }
-      function pct() {
-        return DB.blocks.length
-          ? Math.round((doneCnt() / DB.blocks.length) * 100)
-          : 0;
-      }
+function renderTabs() {
+  document.getElementById('tabs').innerHTML = TABS.map((t,i) =>
+    `<button class="tab-btn${i===activeTab?' on':''}" onclick="switchTab(${i})">${t.label}</button>`
+  ).join('');
+}
 
-      // Sort by time ascending
-      function sortedByTime(blocks) {
-        return [...blocks].sort((a, b) => {
-          const am = blockStartMins(a);
-          const bm = blockStartMins(b);
-          if (am < 0 && bm < 0) return 0;
-          if (am < 0) return 1;
-          if (bm < 0) return -1;
-          return am - bm;
-        });
-      }
+function renderPanels() {
+  const el = document.getElementById('panels');
+  el.innerHTML = '';
+  TABS.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'pnl' + (i===activeTab?' on':'');
+    d.id = 'pnl' + i;
+    el.appendChild(d);
+  });
+  buildPanel(TABS[activeTab].key, activeTab);
+}
 
-      let pendingTime = null; // Holds time string while adding a block
+function buildPanel(key, idx) {
+  const map = {
+    today: buildToday,
+    timer: buildTimer,
+    process: buildProcess,
+    analytics: buildAnalytics,
+    week: buildWeek,
+    energy: buildEnergy,
+    journal: buildJournal,
+    gratitude: buildGratitude,
+    manifest: buildManifest,
+    knowme: buildKnow,
+    affirmations: buildAff,
+    upskill: buildUpskill,
+    dump: buildDump,
+    suggestions: buildSuggestions,
+    myRules: buildRules,
+    mindset: buildMindset,
+    setup: buildSetup,
+  };
+  if (map[key]) map[key](idx);
+}
 
-      function buildToday(idx = 0) {
-        const p = document.getElementById("pnl" + idx);
-        const done = doneCnt(),
-          total = DB.blocks.length,
-          pc = pct();
-        const sorted = sortedByTime(DB.blocks);
-        const circ = 2 * Math.PI * 36;
-        const off = circ - (circ * pc) / 100;
+// ============ HELPERS ============
+const TAG_MAP   = {h:'ch',w:'cw',m:'cm',s:'cs',l:'cl',r:'cr'};
+const TAG_LABEL = {h:'Health',w:'Work',m:'Music',s:'Side hustle',l:'Love',r:'Rest'};
+const TAG_OPTS  = ['h','w','m','s','l','r'];
+const PRIO_CHIP = {xh:'prio-xh',h:'prio-h',m:'prio-m',l:'prio-l'};
+const PRIO_LABEL= {xh:'Extreme',h:'High',m:'Medium',l:'Low'};
+const PRIO_OPTS = ['xh','h','m','l'];
 
-        const prevHtml =
-          DB.prevBlocks.length > 0
-            ? `
+function fmt(s) {
+  let m = Math.floor(s/60), sec = s%60;
+  return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+}
+
+function svgCheck() {
+  return `<svg viewBox="0 0 12 12"><polyline points="1.5,6 5,9.5 10.5,2.5"/></svg>`;
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ============ TODAY ============
+function doneCnt() { return DB.blocks.filter(b => b.done).length; }
+function pct()     { return DB.blocks.length ? Math.round(doneCnt()/DB.blocks.length*100) : 0; }
+
+// Sort by time ascending
+function sortedByTime(blocks) {
+  return [...blocks].sort((a,b) => {
+    const am = blockStartMins(a);
+    const bm = blockStartMins(b);
+    if (am < 0 && bm < 0) return 0;
+    if (am < 0) return 1;
+    if (bm < 0) return -1;
+    return am - bm;
+  });
+}
+
+let pendingTime = null; // Holds time string while adding a block
+
+function buildToday(idx=0) {
+  const p = document.getElementById('pnl'+idx);
+  const done = doneCnt(), total = DB.blocks.length, pc = pct();
+  const sorted = sortedByTime(DB.blocks);
+  const circ = 2*Math.PI*36;
+  const off  = circ - (circ * pc / 100);
+
+  const prevHtml = DB.prevBlocks.length > 0 ? `
     <div class="sec-label" style="margin-top:18px">Yesterday's tasks</div>
-    ${DB.prevBlocks
-      .map(
-        (b) => `
-      <div class="blk${b.done ? " done" : ""}">
+    ${DB.prevBlocks.map(b => `
+      <div class="blk${b.done?' done':''}">
         <span class="blk-time">${escHtml(b.time)}</span>
         <span class="blk-task">${escHtml(b.task)}</span>
         <span class="chip ${TAG_MAP[b.tag]}">${TAG_LABEL[b.tag]}</span>
         <span class="chip ${PRIO_CHIP[b.prio]}">${PRIO_LABEL[b.prio]}</span>
         <button class="del-btn" onclick="delPrevBlock(${b.id})" title="Remove">&#10005;</button>
-      </div>`,
-      )
-      .join("")}
+      </div>`).join('')}
     <button class="btn btn-sm" style="margin-top:6px" onclick="importPrevBlocks()">Import as today's tasks</button>
-  `
-            : "";
+  ` : '';
 
-        p.innerHTML = `
+  p.innerHTML = `
     <div class="stat-grid">
       <div class="stat"><div class="n green">${done}</div><div class="l">Done</div></div>
-      <div class="stat"><div class="n">${total - done}</div><div class="l">Left</div></div>
+      <div class="stat"><div class="n">${total-done}</div><div class="l">Left</div></div>
       <div class="stat"><div class="n amber">${pc}%</div><div class="l">Progress</div></div>
     </div>
     <div class="ring-wrap">
@@ -2166,137 +936,104 @@
     <div class="sec-label">Add a block</div>
     <div class="add-row" style="align-items:center">
       <button class="time-pick-btn" id="nb-time-btn" onclick="pickTimeForNew()" style="min-width:130px">
-        ${pendingTime ? escHtml(pendingTime) : "&#128336; Pick Time"}
+        ${pendingTime ? escHtml(pendingTime) : '&#128336; Pick Time'}
       </button>
       <input id="nb-task" placeholder="Task name..." style="flex:1">
-      <select id="nb-tag" style="max-width:96px">${TAG_OPTS.map((t) => `<option value="${t}">${TAG_LABEL[t]}</option>`).join("")}</select>
-      <select id="nb-prio" style="max-width:90px">${PRIO_OPTS.map((pp) => `<option value="${pp}">${PRIO_LABEL[pp]}</option>`).join("")}</select>
+      <select id="nb-tag" style="max-width:96px">${TAG_OPTS.map(t=>`<option value="${t}">${TAG_LABEL[t]}</option>`).join('')}</select>
+      <select id="nb-prio" style="max-width:90px">${PRIO_OPTS.map(pp=>`<option value="${pp}">${PRIO_LABEL[pp]}</option>`).join('')}</select>
       <button class="btn btn-amber btn-sm" onclick="addBlock()">+ Add</button>
     </div>
     <div class="sec-label">Today's schedule (ascending by time)</div>
     <div id="blocks-list">
-      ${sorted
-        .map(
-          (b) => `
-        <div class="blk${b.done ? " done" : ""}" id="blk-${b.id}">
-          <div class="dot-btn${b.done ? " ck" : ""}" onclick="toggleBlock(${b.id})">${b.done ? svgCheck() : ""}</div>
-          <span class="blk-time" style="cursor:pointer;text-decoration:underline dotted" onclick="editBlockTime(${b.id})" title="Click to change time">${escHtml(b.time || "--")}</span>
+      ${sorted.map(b=>`
+        <div class="blk${b.done?' done':''}" id="blk-${b.id}">
+          <div class="dot-btn${b.done?' ck':''}" onclick="toggleBlock(${b.id})">${b.done?svgCheck():''}</div>
+          <span class="blk-time" style="cursor:pointer;text-decoration:underline dotted" onclick="editBlockTime(${b.id})" title="Click to change time">${escHtml(b.time||'--')}</span>
           <span class="blk-task">${escHtml(b.task)}</span>
           <span class="chip ${TAG_MAP[b.tag]}">${TAG_LABEL[b.tag]}</span>
           <span class="chip ${PRIO_CHIP[b.prio]}">${PRIO_LABEL[b.prio]}</span>
           <button class="del-btn" onclick="delBlock(${b.id})">&#10005;</button>
-        </div>`,
-        )
-        .join("")}
+        </div>`).join('')}
     </div>
     <button class="btn btn-full" onclick="resetBlocks()">Reset today</button>
     ${prevHtml}
   `;
-      }
+}
 
-      async function pickTimeForNew() {
-        const result = await openTimePicker("6:00 AM", "7:00 AM", null);
-        if (result) {
-          pendingTime = result;
-          // Re-render just the button
-          const btn = document.getElementById("nb-time-btn");
-          if (btn) btn.textContent = result;
-        }
-      }
+async function pickTimeForNew() {
+  const result = await openTimePicker('6:00 AM', '7:00 AM', null);
+  if (result) {
+    pendingTime = result;
+    // Re-render just the button
+    const btn = document.getElementById('nb-time-btn');
+    if (btn) btn.textContent = result;
+  }
+}
 
-      async function editBlockTime(id) {
-        const b = DB.blocks.find((x) => x.id === id);
-        if (!b) return;
-        let startDef = "6:00 AM",
-          endDef = "7:00 AM";
-        if (b.time && b.time !== "--") {
-          const parts = b.time.split("-");
-          if (parts[0]) startDef = parts[0].trim();
-          if (parts[1]) endDef = parts[1].trim();
-        }
-        const result = await openTimePicker(startDef, endDef, id);
-        if (result) {
-          b.time = result;
-          saveDB();
-          buildToday(0);
-        }
-      }
+async function editBlockTime(id) {
+  const b = DB.blocks.find(x => x.id === id);
+  if (!b) return;
+  let startDef = '6:00 AM', endDef = '7:00 AM';
+  if (b.time && b.time !== '--') {
+    const parts = b.time.split('-');
+    if (parts[0]) startDef = parts[0].trim();
+    if (parts[1]) endDef = parts[1].trim();
+  }
+  const result = await openTimePicker(startDef, endDef, id);
+  if (result) {
+    b.time = result;
+    saveDB();
+    buildToday(0);
+  }
+}
 
-      function toggleBlock(id) {
-        const b = DB.blocks.find((x) => x.id === id);
-        if (b) {
-          b.done = !b.done;
-          saveDB();
-          buildToday(0);
-        }
-      }
-      function delBlock(id) {
-        DB.blocks = DB.blocks.filter((x) => x.id !== id);
-        saveDB();
-        buildToday(0);
-      }
-      function delPrevBlock(id) {
-        DB.prevBlocks = DB.prevBlocks.filter((x) => x.id !== id);
-        saveDB();
-        buildToday(0);
-      }
-      function importPrevBlocks() {
-        const toAdd = DB.prevBlocks.map((b) => ({
-          ...b,
-          id: DB.blocksNextId++,
-          done: false,
-        }));
-        DB.blocks = [...DB.blocks, ...toAdd];
-        DB.prevBlocks = [];
-        saveDB();
-        buildToday(0);
-      }
-      function resetBlocks() {
-        DB.blocks.forEach((b) => (b.done = false));
-        saveDB();
-        buildToday(0);
-      }
-      function addBlock() {
-        const time = pendingTime || "--";
-        const task = document.getElementById("nb-task").value.trim();
-        const tag = document.getElementById("nb-tag").value;
-        const prio = document.getElementById("nb-prio").value;
-        if (!task) return;
-        DB.blocks.push({
-          id: DB.blocksNextId++,
-          time,
-          task,
-          tag,
-          prio,
-          done: false,
-          date: todayStr(),
-        });
-        document.getElementById("nb-task").value = "";
-        pendingTime = null;
-        saveDB();
-        buildToday(0);
-      }
+function toggleBlock(id) {
+  const b = DB.blocks.find(x => x.id===id);
+  if (b) { b.done = !b.done; saveDB(); buildToday(0); }
+}
+function delBlock(id) {
+  DB.blocks = DB.blocks.filter(x => x.id!==id); saveDB(); buildToday(0);
+}
+function delPrevBlock(id) {
+  DB.prevBlocks = DB.prevBlocks.filter(x => x.id!==id); saveDB(); buildToday(0);
+}
+function importPrevBlocks() {
+  const toAdd = DB.prevBlocks.map(b => ({...b, id: DB.blocksNextId++, done: false}));
+  DB.blocks = [...DB.blocks, ...toAdd];
+  DB.prevBlocks = [];
+  saveDB(); buildToday(0);
+}
+function resetBlocks() {
+  DB.blocks.forEach(b => b.done = false); saveDB(); buildToday(0);
+}
+function addBlock() {
+  const time = pendingTime || '--';
+  const task = document.getElementById('nb-task').value.trim();
+  const tag  = document.getElementById('nb-tag').value;
+  const prio = document.getElementById('nb-prio').value;
+  if (!task) return;
+  DB.blocks.push({id: DB.blocksNextId++, time, task, tag, prio, done:false, date:todayStr()});
+  document.getElementById('nb-task').value='';
+  pendingTime = null;
+  saveDB(); buildToday(0);
+}
 
-      // ============ TIMER ============
-      function buildTimer(idx = 1) {
-        const p = document.getElementById("pnl" + idx);
-        const tm = DB.timer;
-        const total = DB.timerModes[tm.mode];
-        const left = Math.max(0, total - tm.elapsed);
-        const pDone = Math.min(100, Math.round((tm.elapsed / total) * 100));
-        const circ = 2 * Math.PI * 52;
-        const off = circ - (circ * pDone) / 100;
-        const mLabel = {
-          focus: "Deep focus. Phone down. GO.",
-          short: "Short break - breathe, stretch.",
-          long: "Long break - proper rest, you earned it.",
-        };
-        p.innerHTML = `
+// ============ TIMER ============
+function buildTimer(idx=1) {
+  const p = document.getElementById('pnl'+idx);
+  const tm = DB.timer;
+  const total = DB.timerModes[tm.mode];
+  const left  = Math.max(0, total - tm.elapsed);
+  const pDone = Math.min(100, Math.round((tm.elapsed/total)*100));
+  const circ  = 2*Math.PI*52;
+  const off   = circ - (circ * pDone / 100);
+  const mLabel = {focus:'Deep focus. Phone down. GO.',short:'Short break - breathe, stretch.',long:'Long break - proper rest, you earned it.'};
+  p.innerHTML = `
     <div class="timer-outer">
       <div class="tmode-row">
-        <button class="tmode${tm.mode === "focus" ? " on" : ""}" onclick="setMode('focus')">Focus 25</button>
-        <button class="tmode${tm.mode === "short" ? " on" : ""}" onclick="setMode('short')">Break 5</button>
-        <button class="tmode${tm.mode === "long" ? " on" : ""}" onclick="setMode('long')">Long break 15</button>
+        <button class="tmode${tm.mode==='focus'?' on':''}" onclick="setMode('focus')">Focus 25</button>
+        <button class="tmode${tm.mode==='short'?' on':''}" onclick="setMode('short')">Break 5</button>
+        <button class="tmode${tm.mode==='long'?' on':''}" onclick="setMode('long')">Long break 15</button>
       </div>
       <div style="display:flex;justify-content:center;margin-bottom:12px">
         <svg width="130" height="130" viewBox="0 0 130 130">
@@ -2307,179 +1044,122 @@
           <text x="65" y="61" text-anchor="middle" font-size="28" font-weight="700"
             fill="#ece9e3" font-family="Plus Jakarta Sans,sans-serif" id="timer-face">${fmt(left)}</text>
           <text x="65" y="79" text-anchor="middle" font-size="11" fill="#444"
-            font-family="Plus Jakarta Sans,sans-serif">${tm.mode === "focus" ? "focus" : "break"}</text>
+            font-family="Plus Jakarta Sans,sans-serif">${tm.mode==='focus'?'focus':'break'}</text>
         </svg>
       </div>
       <div class="timer-sub">${mLabel[tm.mode]}</div>
       <div class="t-btns">
-        <button class="btn btn-amber" onclick="startTimer()" id="btn-start">${tm.running ? "Pause" : "Start"}</button>
+        <button class="btn btn-amber" onclick="startTimer()" id="btn-start">${tm.running?'Pause':'Start'}</button>
         <button class="btn" onclick="resetTimer()">Reset</button>
       </div>
     </div>
     <div class="card"><p>Pick Focus 25 for any task block. Short break after each. Long break after 4 cycles. Your ADHD brain needs these stops to stay sharp.</p></div>
   `;
-      }
+}
 
-      function setMode(m) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        DB.timer = { mode: m, running: false, elapsed: 0 };
-        saveLocalDB();
-        buildTimer(1);
-      }
-      function startTimer() {
-        const tm = DB.timer;
-        if (tm.running) {
-          clearInterval(timerInterval);
-          timerInterval = null;
-          tm.running = false;
-          saveLocalDB();
-          buildTimer(1);
-          return;
-        }
-        tm.running = true;
-        saveLocalDB();
-        document.getElementById("btn-start").textContent = "Pause";
-        const total = DB.timerModes[tm.mode];
-        const circ = 2 * Math.PI * 52;
-        timerInterval = setInterval(() => {
-          DB.timer.elapsed++;
-          const left = Math.max(0, total - DB.timer.elapsed);
-          const pDone = Math.min(
-            100,
-            Math.round((DB.timer.elapsed / total) * 100),
-          );
-          const off = circ - (circ * pDone) / 100;
-          const face = document.getElementById("timer-face");
-          const ring = document.getElementById("timer-ring");
-          if (face) face.textContent = fmt(left);
-          if (ring) ring.setAttribute("stroke-dashoffset", off.toFixed(1));
-          if (DB.timer.elapsed >= total) {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            DB.timer.running = false;
-            DB.timer.elapsed = 0;
-            saveLocalDB();
-            buildTimer(1);
-          }
-        }, 1000);
-      }
-      function resetTimer() {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        DB.timer = { ...DB.timer, running: false, elapsed: 0 };
-        saveLocalDB();
-        buildTimer(1);
-      }
+function setMode(m) {
+  clearInterval(timerInterval); timerInterval = null;
+  DB.timer = {mode:m, running:false, elapsed:0};
+  saveLocalDB(); buildTimer(1);
+}
+function startTimer() {
+  const tm = DB.timer;
+  if (tm.running) {
+    clearInterval(timerInterval); timerInterval = null;
+    tm.running = false; saveLocalDB(); buildTimer(1); return;
+  }
+  tm.running = true; saveLocalDB();
+  document.getElementById('btn-start').textContent = 'Pause';
+  const total = DB.timerModes[tm.mode];
+  const circ = 2*Math.PI*52;
+  timerInterval = setInterval(() => {
+    DB.timer.elapsed++;
+    const left  = Math.max(0, total - DB.timer.elapsed);
+    const pDone = Math.min(100, Math.round((DB.timer.elapsed/total)*100));
+    const off   = circ - (circ * pDone / 100);
+    const face  = document.getElementById('timer-face');
+    const ring  = document.getElementById('timer-ring');
+    if (face) face.textContent = fmt(left);
+    if (ring) ring.setAttribute('stroke-dashoffset', off.toFixed(1));
+    if (DB.timer.elapsed >= total) {
+      clearInterval(timerInterval); timerInterval = null;
+      DB.timer.running = false; DB.timer.elapsed = 0; saveLocalDB(); buildTimer(1);
+    }
+  }, 1000);
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerInterval = null;
+  DB.timer = {...DB.timer, running:false, elapsed:0}; saveLocalDB(); buildTimer(1);
+}
 
-      // ============ PROCESS ============
-      function buildProcess(idx = 2) {
-        const p = document.getElementById("pnl" + idx);
-        p.innerHTML = `
+// ============ PROCESS ============
+function buildProcess(idx=2) {
+  const p = document.getElementById('pnl'+idx);
+  p.innerHTML = `
     <div class="sec-label">Add a step</div>
     <div class="add-row">
       <input id="np-text" placeholder="Add a daily process step...">
       <button class="btn btn-amber btn-sm" onclick="addProc()">+ Add</button>
     </div>
     <div class="sec-label">Your daily process</div>
-    ${DB.procs
-      .map(
-        (s, i) => `
+    ${DB.procs.map((s,i)=>`
       <div class="proc-step">
-        <div class="proc-num${s.done ? " dn" : ""}" onclick="toggleProc(${s.id})">${s.done ? "&#10003;" : i + 1}</div>
-        <span class="proc-txt${s.done ? " dn" : ""}">${escHtml(s.text)}</span>
+        <div class="proc-num${s.done?' dn':''}" onclick="toggleProc(${s.id})">${s.done?'&#10003;':i+1}</div>
+        <span class="proc-txt${s.done?' dn':''}">${escHtml(s.text)}</span>
         <button class="del-btn" onclick="delProc(${s.id})">&#10005;</button>
-      </div>`,
-      )
-      .join("")}
+      </div>`).join('')}
   `;
-      }
-      function addProc() {
-        const v = document.getElementById("np-text").value.trim();
-        if (!v) return;
-        DB.procs.push({ id: DB.procsNextId++, text: v, done: false });
-        saveDB();
-        buildProcess(2);
-      }
-      function toggleProc(id) {
-        const s = DB.procs.find((x) => x.id === id);
-        if (s) {
-          s.done = !s.done;
-          saveDB();
-          buildProcess(2);
-        }
-      }
-      function delProc(id) {
-        DB.procs = DB.procs.filter((x) => x.id !== id);
-        saveDB();
-        buildProcess(2);
-      }
+}
+function addProc() {
+  const v = document.getElementById('np-text').value.trim(); if(!v) return;
+  DB.procs.push({id:DB.procsNextId++,text:v,done:false}); saveDB(); buildProcess(2);
+}
+function toggleProc(id) {
+  const s = DB.procs.find(x=>x.id===id); if(s) { s.done=!s.done; saveDB(); buildProcess(2); }
+}
+function delProc(id) { DB.procs=DB.procs.filter(x=>x.id!==id); saveDB(); buildProcess(2); }
 
-      // ============ ANALYTICS ============
-      function buildAnalytics(idx = 3) {
-        const p = document.getElementById("pnl" + idx);
-        const tagCounts = { h: 0, w: 0, m: 0, s: 0, l: 0, r: 0 };
-        const tagTotals = { h: 0, w: 0, m: 0, s: 0, l: 0, r: 0 };
-        DB.blocks.forEach((b) => {
-          tagTotals[b.tag]++;
-          if (b.done) tagCounts[b.tag]++;
-        });
-        const prioCounts = { xh: 0, h: 0, m: 0, l: 0 };
-        const prioTotals = { xh: 0, h: 0, m: 0, l: 0 };
-        DB.blocks.forEach((b) => {
-          prioTotals[b.prio]++;
-          if (b.done) prioCounts[b.prio]++;
-        });
-        const eLogs = (DB.energyLog || []).slice(-7);
-        const winsCount = (DB.wins || []).length;
-        const journalCount = (DB.journal || []).length;
-        const dumpCount = (DB.dump || []).length;
-        const catColors = {
-          h: "#22c87a",
-          w: "#5b9cf6",
-          m: "#f0a500",
-          s: "#9f87f5",
-          l: "#e07ab0",
-          r: "#888",
-        };
-        const prioColors = {
-          xh: "#e05a5a",
-          h: "#f0a500",
-          m: "#5b9cf6",
-          l: "#888",
-        };
-        const catBars = TAG_OPTS.map((t) => {
-          const tot = tagTotals[t];
-          if (!tot) return "";
-          const pct2 = Math.round((tagCounts[t] / tot) * 100);
-          return `<div class="bar-row">
-      <div class="bar-label" style="color:${catColors[t]}">${TAG_LABEL[t].slice(0, 6)}</div>
+// ============ ANALYTICS ============
+function buildAnalytics(idx=3) {
+  const p = document.getElementById('pnl'+idx);
+  const tagCounts = {h:0,w:0,m:0,s:0,l:0,r:0};
+  const tagTotals = {h:0,w:0,m:0,s:0,l:0,r:0};
+  DB.blocks.forEach(b => { tagTotals[b.tag]++; if(b.done) tagCounts[b.tag]++; });
+  const prioCounts = {xh:0,h:0,m:0,l:0};
+  const prioTotals = {xh:0,h:0,m:0,l:0};
+  DB.blocks.forEach(b => { prioTotals[b.prio]++; if(b.done) prioCounts[b.prio]++; });
+  const eLogs = (DB.energyLog||[]).slice(-7);
+  const winsCount = (DB.wins||[]).length;
+  const journalCount = (DB.journal||[]).length;
+  const dumpCount = (DB.dump||[]).length;
+  const catColors = {h:'#22c87a',w:'#5b9cf6',m:'#f0a500',s:'#9f87f5',l:'#e07ab0',r:'#888'};
+  const prioColors = {xh:'#e05a5a',h:'#f0a500',m:'#5b9cf6',l:'#888'};
+  const catBars = TAG_OPTS.map(t => {
+    const tot = tagTotals[t]; if(!tot) return '';
+    const pct2 = Math.round((tagCounts[t]/tot)*100);
+    return `<div class="bar-row">
+      <div class="bar-label" style="color:${catColors[t]}">${TAG_LABEL[t].slice(0,6)}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${pct2}%;background:${catColors[t]}"></div></div>
       <div class="bar-val">${pct2}%</div>
     </div>`;
-        }).join("");
-        const prioBars = PRIO_OPTS.map((t) => {
-          const tot = prioTotals[t];
-          if (!tot) return "";
-          const pct2 = Math.round((prioCounts[t] / tot) * 100);
-          return `<div class="bar-row">
-      <div class="bar-label" style="color:${prioColors[t]}">${PRIO_LABEL[t].slice(0, 4)}</div>
+  }).join('');
+  const prioBars = PRIO_OPTS.map(t => {
+    const tot = prioTotals[t]; if(!tot) return '';
+    const pct2 = Math.round((prioCounts[t]/tot)*100);
+    return `<div class="bar-row">
+      <div class="bar-label" style="color:${prioColors[t]}">${PRIO_LABEL[t].slice(0,4)}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${pct2}%;background:${prioColors[t]}"></div></div>
       <div class="bar-val">${pct2}%</div>
     </div>`;
-        }).join("");
-        const moodBars = eLogs.length
-          ? eLogs
-              .map((e) => {
-                const h = Math.round((e.mood / 10) * 50);
-                return `<div class="mood-bar-col">
-      <div class="mood-bar-fill" style="height:${h}px;background:${e.mood >= 7 ? "#22c87a" : e.mood >= 4 ? "#f0a500" : "#e05a5a"}"></div>
+  }).join('');
+  const moodBars = eLogs.length ? eLogs.map(e => {
+    const h = Math.round((e.mood/10)*50);
+    return `<div class="mood-bar-col">
+      <div class="mood-bar-fill" style="height:${h}px;background:${e.mood>=7?'#22c87a':e.mood>=4?'#f0a500':'#e05a5a'}"></div>
       <div class="mood-bar-day">${e.mood}</div>
     </div>`;
-              })
-              .join("")
-          : '<div style="font-size:12px;color:var(--text3)">Log energy daily to see mood trend.</div>';
-        p.innerHTML = `
+  }).join('') : '<div style="font-size:12px;color:var(--text3)">Log energy daily to see mood trend.</div>';
+  p.innerHTML = `
     <div class="stat-grid" style="grid-template-columns:repeat(auto-fit,minmax(70px,1fr))">
       <div class="stat"><div class="n green">${doneCnt()}</div><div class="l">Done today</div></div>
       <div class="stat"><div class="n amber">${pct()}%</div><div class="l">Completion</div></div>
@@ -2487,66 +1167,36 @@
       <div class="stat"><div class="n">${journalCount}</div><div class="l">Journal entries</div></div>
       <div class="stat"><div class="n">${dumpCount}</div><div class="l">Brain dumps</div></div>
     </div>
-    <div class="chart-wrap"><div class="chart-title">Task completion by category</div><div class="bar-chart">${catBars || '<div style="font-size:12px;color:var(--text3)">No tasks yet.</div>'}</div></div>
-    <div class="chart-wrap"><div class="chart-title">Done rate by priority level</div><div class="bar-chart">${prioBars || '<div style="font-size:12px;color:var(--text3)">No tasks yet.</div>'}</div></div>
+    <div class="chart-wrap"><div class="chart-title">Task completion by category</div><div class="bar-chart">${catBars||'<div style="font-size:12px;color:var(--text3)">No tasks yet.</div>'}</div></div>
+    <div class="chart-wrap"><div class="chart-title">Done rate by priority level</div><div class="bar-chart">${prioBars||'<div style="font-size:12px;color:var(--text3)">No tasks yet.</div>'}</div></div>
     <div class="chart-wrap"><div class="chart-title">Mood trend (last ${eLogs.length} entries)</div><div class="mood-timeline">${moodBars}</div></div>
     <div class="chart-wrap"><div class="chart-title">Activity overview</div><div class="bar-chart">
-      ${[
-        ["Affirmations saved", DB.affs.length, "#9f87f5", 10],
-        [
-          "Process steps done",
-          DB.procs.filter((x) => x.done).length,
-          "#22c87a",
-          DB.procs.length || 1,
-        ],
-        ["Wins logged", Math.min(winsCount, 20), "#f0a500", 20],
-        ["Journal entries", Math.min(journalCount, 30), "#5b9cf6", 30],
-        [
-          "Gratitude items",
-          Math.min((DB.gratitude || []).length, 20),
-          "#e07ab0",
-          20,
-        ],
-      ]
-        .map(
-          ([label, val, color, max]) =>
-            `<div class="bar-row"><div class="bar-label" style="color:${color};min-width:80px;text-align:left;font-size:11px">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((val / max) * 100)}%;background:${color}"></div></div><div class="bar-val">${val}</div></div>`,
-        )
-        .join("")}
+      ${[['Affirmations saved',DB.affs.length,'#9f87f5',10],['Process steps done',DB.procs.filter(x=>x.done).length,'#22c87a',DB.procs.length||1],['Wins logged',Math.min(winsCount,20),'#f0a500',20],['Journal entries',Math.min(journalCount,30),'#5b9cf6',30],['Gratitude items',Math.min((DB.gratitude||[]).length,20),'#e07ab0',20]].map(([label,val,color,max])=>`<div class="bar-row"><div class="bar-label" style="color:${color};min-width:80px;text-align:left;font-size:11px">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round((val/max)*100)}%;background:${color}"></div></div><div class="bar-val">${val}</div></div>`).join('')}
     </div></div>
   `;
-      }
+}
 
-      // ============ WEEK ============
-      function buildWeek(idx = 4) {
-        const p = document.getElementById("pnl" + idx);
-        const todayIdx = new Date().getDay();
-        const days7 = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        const winsHtml = (DB.wins || [])
-          .slice(0, 12)
-          .map(
-            (w) => `
+// ============ WEEK ============
+function buildWeek(idx=4) {
+  const p = document.getElementById('pnl'+idx);
+  const todayIdx = new Date().getDay();
+  const days7 = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const winsHtml = (DB.wins||[]).slice(0,12).map(w=>`
     <div class="saved-item">
       <div class="si-text">${escHtml(w.text)}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-        <div class="si-meta">${escHtml(w.day || "")}</div>
+        <div class="si-meta">${escHtml(w.day||'')}</div>
         <button class="del-btn" onclick="delWin(${w.id})">&#10005;</button>
       </div>
-    </div>`,
-          )
-          .join("");
-        p.innerHTML = `
+    </div>`).join('');
+  p.innerHTML = `
     <div class="sec-label">Weekly streak</div>
     <div class="week-grid">
-      ${days7
-        .map(
-          (d, i) => `
-        <div class="day-b${i === todayIdx ? " td" : ""}${DB.weekDays[i] ? " fl" : ""}" onclick="toggleDay(${i})">
+      ${days7.map((d,i)=>`
+        <div class="day-b${i===todayIdx?' td':''}${DB.weekDays[i]?' fl':''}" onclick="toggleDay(${i})">
           <div class="day-n">${d}</div>
-          <div class="day-s">${DB.weekDays[i] ? "&#10003;" : "-"}</div>
-        </div>`,
-        )
-        .join("")}
+          <div class="day-s">${DB.weekDays[i]?'&#10003;':'-'}</div>
+        </div>`).join('')}
     </div>
     <div class="sec-label">Today's win</div>
     <div class="win-b"><textarea id="win-input" rows="2" placeholder="One win, even a tiny one..."></textarea></div>
@@ -2554,88 +1204,33 @@
     <div class="sec-label">Win log</div>
     ${winsHtml || '<div class="card"><p>No wins logged yet. Start today.</p></div>'}
   `;
-      }
-      function toggleDay(i) {
-        DB.weekDays[i] = !DB.weekDays[i];
-        saveDB();
-        buildWeek(4);
-      }
-      function saveWin() {
-        const v = document.getElementById("win-input").value.trim();
-        if (!v) return;
-        DB.wins = DB.wins || [];
-        DB.wins.unshift({
-          id: DB.winsNextId++,
-          text: v,
-          day: new Date().toLocaleDateString("en-IN", {
-            weekday: "short",
-            day: "numeric",
-            month: "short",
-          }),
-        });
-        saveDB();
-        buildWeek(4);
-      }
-      function delWin(id) {
-        DB.wins = DB.wins.filter((x) => x.id !== id);
-        saveDB();
-        buildWeek(4);
-      }
+}
+function toggleDay(i) { DB.weekDays[i]=!DB.weekDays[i]; saveDB(); buildWeek(4); }
+function saveWin() {
+  const v = document.getElementById('win-input').value.trim(); if(!v) return;
+  DB.wins = DB.wins || [];
+  DB.wins.unshift({id:DB.winsNextId++,text:v,day:new Date().toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short'})});
+  saveDB(); buildWeek(4);
+}
+function delWin(id) { DB.wins=DB.wins.filter(x=>x.id!==id); saveDB(); buildWeek(4); }
 
-      // ============ ENERGY ============
-      function buildEnergy(idx = 5) {
-        const p = document.getElementById("pnl" + idx);
-        const last = (DB.energyLog || []).slice(-1)[0] || {
-          energy: 5,
-          focus: 5,
-          mood: 5,
-          stress: 5,
-          sleep: 7,
-          water: 5,
-          exercise: 0,
-        };
-        const avg = Math.round((last.energy + last.focus + last.mood) / 3);
-        let adv = "",
-          ac = "rgba(255,255,255,0.07)";
-        if (avg >= 7) {
-          adv =
-            "High energy day. Attack your hardest task first. Do not waste this window on small things.";
-          ac = "#22c87a";
-        } else if (avg >= 4) {
-          adv =
-            "Medium energy. Build momentum with easier tasks. Avoid big decisions right now.";
-          ac = "#f0a500";
-        } else {
-          adv =
-            "Low energy. Not failure, just a signal. Protect your basics: eat, hydrate, rest. Tomorrow resets.";
-          ac = "#e05a5a";
-        }
-        const logHistory = (DB.energyLog || [])
-          .slice(-5)
-          .reverse()
-          .map(
-            (e) => `
+// ============ ENERGY ============
+function buildEnergy(idx=5) {
+  const p = document.getElementById('pnl'+idx);
+  const last = (DB.energyLog||[]).slice(-1)[0] || {energy:5,focus:5,mood:5,stress:5,sleep:7,water:5,exercise:0};
+  const avg = Math.round((last.energy+last.focus+last.mood)/3);
+  let adv='', ac='rgba(255,255,255,0.07)';
+  if(avg>=7){adv='High energy day. Attack your hardest task first. Do not waste this window on small things.';ac='#22c87a';}
+  else if(avg>=4){adv='Medium energy. Build momentum with easier tasks. Avoid big decisions right now.';ac='#f0a500';}
+  else{adv='Low energy. Not failure, just a signal. Protect your basics: eat, hydrate, rest. Tomorrow resets.';ac='#e05a5a';}
+  const logHistory = (DB.energyLog||[]).slice(-5).reverse().map(e=>`
     <div class="saved-item">
       <div class="row" style="flex-wrap:wrap;gap:6px">
-        ${[
-          ["Energy", e.energy, "#22c87a"],
-          ["Focus", e.focus, "#5b9cf6"],
-          ["Mood", e.mood, "#f0a500"],
-          ["Stress", e.stress, "#e05a5a"],
-          ["Sleep", e.sleep + "h", "#9f87f5"],
-          ["Water", e.water + "gl", "#5b9cf6"],
-        ]
-          .map(
-            ([l, v, c]) =>
-              `<span style="font-size:11px;color:${c};background:rgba(255,255,255,0.04);padding:2px 7px;border-radius:4px">${l}: <b>${v}</b></span>`,
-          )
-          .join("")}
+        ${[['Energy',e.energy,'#22c87a'],['Focus',e.focus,'#5b9cf6'],['Mood',e.mood,'#f0a500'],['Stress',e.stress,'#e05a5a'],['Sleep',e.sleep+'h','#9f87f5'],['Water',e.water+'gl','#5b9cf6']].map(([l,v,c])=>`<span style="font-size:11px;color:${c};background:rgba(255,255,255,0.04);padding:2px 7px;border-radius:4px">${l}: <b>${v}</b></span>`).join('')}
       </div>
-      <div class="si-meta" style="margin-top:4px">${escHtml(e.note || "")}</div>
-    </div>`,
-          )
-          .join("");
-        p.innerHTML = `
+      <div class="si-meta" style="margin-top:4px">${escHtml(e.note||'')}</div>
+    </div>`).join('');
+  p.innerHTML = `
     <div class="sec-label">Check in with yourself</div>
     <div class="energy-row"><div class="energy-lbl"><span>Energy (physical power)</span><span class="ev" id="ev1">${last.energy}</span></div><input type="range" min="1" max="10" step="1" value="${last.energy}" oninput="document.getElementById('ev1').textContent=this.value"></div>
     <div class="energy-row"><div class="energy-lbl"><span>Focus (mental sharpness)</span><span class="ev" id="ev2">${last.focus}</span></div><input type="range" min="1" max="10" step="1" value="${last.focus}" oninput="document.getElementById('ev2').textContent=this.value"></div>
@@ -2643,222 +1238,147 @@
     <div class="energy-row"><div class="energy-lbl"><span>Stress level (1=calm, 10=overwhelmed)</span><span class="ev" id="ev4">${last.stress}</span></div><input type="range" min="1" max="10" step="1" value="${last.stress}" oninput="document.getElementById('ev4').textContent=this.value"></div>
     <div class="energy-row"><div class="energy-lbl"><span>Hours slept last night</span><span class="ev" id="ev5">${last.sleep}h</span></div><input type="range" min="3" max="12" step="0.5" value="${last.sleep}" oninput="document.getElementById('ev5').textContent=this.value+'h'"></div>
     <div class="energy-row"><div class="energy-lbl"><span>Glasses of water today</span><span class="ev" id="ev6">${last.water}</span></div><input type="range" min="0" max="15" step="1" value="${last.water}" oninput="document.getElementById('ev6').textContent=this.value"></div>
-    <div class="energy-row"><div class="energy-lbl"><span>Exercised today?</span><span class="ev" id="ev7">${last.exercise ? "Yes" : "No"}</span></div><input type="range" min="0" max="1" step="1" value="${last.exercise}" oninput="document.getElementById('ev7').textContent=this.value==='1'?'Yes':'No'"></div>
-    <div style="margin-bottom:12px"><div class="sec-label">Quick note</div><textarea id="energy-note" rows="2" placeholder="What's making you feel this way today?">${escHtml(last.note || "")}</textarea></div>
+    <div class="energy-row"><div class="energy-lbl"><span>Exercised today?</span><span class="ev" id="ev7">${last.exercise?'Yes':'No'}</span></div><input type="range" min="0" max="1" step="1" value="${last.exercise}" oninput="document.getElementById('ev7').textContent=this.value==='1'?'Yes':'No'"></div>
+    <div style="margin-bottom:12px"><div class="sec-label">Quick note</div><textarea id="energy-note" rows="2" placeholder="What's making you feel this way today?">${escHtml(last.note||'')}</textarea></div>
     <div class="advice-box" id="adv-box" style="border-color:${ac}">${adv}</div>
     <button class="btn btn-amber" style="margin-top:10px;width:100%" onclick="saveEnergy()">Save today's check-in</button>
     <div class="divider"></div>
     <div class="sec-label">Recent check-ins</div>
     ${logHistory || '<div class="card"><p>No check-ins logged yet. Save one now.</p></div>'}
   `;
-      }
-      function saveEnergy() {
-        const entry = {
-          id: DB.energyNextId++,
-          energy:
-            parseInt(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(1)")
-                .value,
-            ) || 5,
-          focus:
-            parseInt(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(2)")
-                .value,
-            ) || 5,
-          mood:
-            parseInt(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(3)")
-                .value,
-            ) || 5,
-          stress:
-            parseInt(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(4)")
-                .value,
-            ) || 5,
-          sleep:
-            parseFloat(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(5)")
-                .value,
-            ) || 7,
-          water:
-            parseInt(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(6)")
-                .value,
-            ) || 5,
-          exercise:
-            parseInt(
-              document.querySelector("#pnl5 input[type=range]:nth-of-type(7)")
-                .value,
-            ) || 0,
-          note: document.getElementById("energy-note").value.trim(),
-          date: todayStr(),
-        };
-        DB.energyLog = DB.energyLog || [];
-        DB.energyLog.push(entry);
-        if (DB.energyLog.length > 90) DB.energyLog = DB.energyLog.slice(-90);
-        saveDB();
-        buildEnergy(5);
-        alert("Check-in saved!");
-      }
+}
+function saveEnergy() {
+  const entry = {
+    id: DB.energyNextId++,
+    energy: parseInt(document.querySelector('#pnl5 input[type=range]:nth-of-type(1)').value)||5,
+    focus:  parseInt(document.querySelector('#pnl5 input[type=range]:nth-of-type(2)').value)||5,
+    mood:   parseInt(document.querySelector('#pnl5 input[type=range]:nth-of-type(3)').value)||5,
+    stress: parseInt(document.querySelector('#pnl5 input[type=range]:nth-of-type(4)').value)||5,
+    sleep:  parseFloat(document.querySelector('#pnl5 input[type=range]:nth-of-type(5)').value)||7,
+    water:  parseInt(document.querySelector('#pnl5 input[type=range]:nth-of-type(6)').value)||5,
+    exercise: parseInt(document.querySelector('#pnl5 input[type=range]:nth-of-type(7)').value)||0,
+    note: document.getElementById('energy-note').value.trim(),
+    date: todayStr()
+  };
+  DB.energyLog = DB.energyLog||[];
+  DB.energyLog.push(entry);
+  if(DB.energyLog.length>90) DB.energyLog=DB.energyLog.slice(-90);
+  saveDB(); buildEnergy(5); alert('Check-in saved!');
+}
 
-      // ============ JOURNAL ============
-      function buildJournal(idx = 6) {
-        const p = document.getElementById("pnl" + idx);
-        const entries = (DB.journal || []).slice().reverse().slice(0, 15);
-        p.innerHTML = `
+// ============ JOURNAL ============
+function buildJournal(idx=6) {
+  const p = document.getElementById('pnl'+idx);
+  const entries = (DB.journal||[]).slice().reverse().slice(0,15);
+  p.innerHTML = `
     <div class="sec-label">Today's journal entry</div>
     <div class="win-b"><textarea id="j-text" rows="5" placeholder="Write freely. No rules. No one reads this but you."></textarea></div>
     <div style="margin-bottom:12px"><input id="j-mood" placeholder="Mood tag (e.g. Anxious, Fired up, Calm...)" style="margin-top:6px"></div>
     <button class="btn btn-amber btn-sm" onclick="saveJournal()" style="margin-bottom:20px">Save entry</button>
     <div class="sec-label">Past entries</div>
-    ${entries.map((e) => `<div class="saved-item"><div class="si-text" style="white-space:pre-wrap">${escHtml(e.text)}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">${e.mood ? `<span class="chip cr">${escHtml(e.mood)}</span>` : "<span></span>"}<button class="del-btn" onclick="delJournal(${e.id})">&#10005;</button></div></div>`).join("") || '<div class="card"><p>No entries yet. Start writing.</p></div>'}
+    ${entries.map(e=>`<div class="saved-item"><div class="si-text" style="white-space:pre-wrap">${escHtml(e.text)}</div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">${e.mood?`<span class="chip cr">${escHtml(e.mood)}</span>`:'<span></span>'}<button class="del-btn" onclick="delJournal(${e.id})">&#10005;</button></div></div>`).join('')||'<div class="card"><p>No entries yet. Start writing.</p></div>'}
   `;
-      }
-      function saveJournal() {
-        const text = document.getElementById("j-text").value.trim();
-        const mood = document.getElementById("j-mood").value.trim();
-        if (!text) return;
-        DB.journal = DB.journal || [];
-        DB.journal.push({
-          id: DB.journalNextId++,
-          text,
-          mood,
-          date: todayStr(),
-        });
-        document.getElementById("j-text").value = "";
-        document.getElementById("j-mood").value = "";
-        saveDB();
-        buildJournal(6);
-      }
-      function delJournal(id) {
-        DB.journal = DB.journal.filter((x) => x.id !== id);
-        saveDB();
-        buildJournal(6);
-      }
+}
+function saveJournal() {
+  const text = document.getElementById('j-text').value.trim();
+  const mood = document.getElementById('j-mood').value.trim();
+  if(!text) return;
+  DB.journal = DB.journal||[];
+  DB.journal.push({id:DB.journalNextId++,text,mood,date:todayStr()});
+  document.getElementById('j-text').value=''; document.getElementById('j-mood').value='';
+  saveDB(); buildJournal(6);
+}
+function delJournal(id) { DB.journal=DB.journal.filter(x=>x.id!==id); saveDB(); buildJournal(6); }
 
-      // ============ GRATITUDE ============
-      function buildGratitude(idx = 7) {
-        const p = document.getElementById("pnl" + idx);
-        const items = (DB.gratitude || []).slice().reverse().slice(0, 20);
-        p.innerHTML = `
+// ============ GRATITUDE ============
+function buildGratitude(idx=7) {
+  const p = document.getElementById('pnl'+idx);
+  const items = (DB.gratitude||[]).slice().reverse().slice(0,20);
+  p.innerHTML = `
     <div class="card" style="margin-bottom:14px"><p>Gratitude rewires your brain to notice wins. Even on the worst day, something was okay. Find it.</p></div>
     <div class="add-row"><input id="grat-text" placeholder="I am grateful for..."><button class="btn btn-amber btn-sm" onclick="saveGratitude()">+ Save</button></div>
-    ${items.map((e) => `<div class="aff-card"><span class="aff-icon" style="color:var(--amber)">&#128591;</span><span class="aff-txt">${escHtml(e.text)}</span><button class="aff-del" onclick="delGratitude(${e.id})">&#10005;</button></div>`).join("") || '<div class="card"><p>Nothing saved yet. What is one small thing that went okay today?</p></div>'}
+    ${items.map(e=>`<div class="aff-card"><span class="aff-icon" style="color:var(--amber)">&#128591;</span><span class="aff-txt">${escHtml(e.text)}</span><button class="aff-del" onclick="delGratitude(${e.id})">&#10005;</button></div>`).join('')||'<div class="card"><p>Nothing saved yet. What is one small thing that went okay today?</p></div>'}
   `;
-      }
-      function saveGratitude() {
-        const v = document.getElementById("grat-text").value.trim();
-        if (!v) return;
-        DB.gratitude = DB.gratitude || [];
-        DB.gratitude.push({
-          id: DB.gratitudeNextId++,
-          text: v,
-          date: todayStr(),
-        });
-        document.getElementById("grat-text").value = "";
-        saveDB();
-        buildGratitude(7);
-      }
-      function delGratitude(id) {
-        DB.gratitude = DB.gratitude.filter((x) => x.id !== id);
-        saveDB();
-        buildGratitude(7);
-      }
+}
+function saveGratitude() {
+  const v = document.getElementById('grat-text').value.trim(); if(!v) return;
+  DB.gratitude = DB.gratitude||[];
+  DB.gratitude.push({id:DB.gratitudeNextId++,text:v,date:todayStr()});
+  document.getElementById('grat-text').value='';
+  saveDB(); buildGratitude(7);
+}
+function delGratitude(id) { DB.gratitude=DB.gratitude.filter(x=>x.id!==id); saveDB(); buildGratitude(7); }
 
-      // ============ MANIFESTATION ============
-      function buildManifest(idx = 8) {
-        const p = document.getElementById("pnl" + idx);
-        const items = (DB.manifest || []).slice().reverse().slice(0, 15);
-        p.innerHTML = `
+// ============ MANIFESTATION ============
+function buildManifest(idx=8) {
+  const p = document.getElementById('pnl'+idx);
+  const items = (DB.manifest||[]).slice().reverse().slice(0,15);
+  p.innerHTML = `
     <div class="card" style="margin-bottom:14px"><p>Write it like it already happened. Be specific. Your brain responds to vivid, present-tense statements.</p></div>
     <div style="margin-bottom:12px"><textarea id="man-text" rows="3" placeholder="I am living my dream life where..."></textarea><input id="man-cat" placeholder="Category (e.g. Career, Health, Love)" style="margin-top:6px"></div>
     <button class="btn btn-amber btn-sm" onclick="saveManifest()" style="margin-bottom:20px">+ Save manifestation</button>
-    ${items.map((e) => `<div class="mind-card"><span class="mind-icon">&#10024;</span><div style="flex:1"><div style="font-size:13px;color:var(--text);line-height:1.6">${escHtml(e.text)}</div>${e.cat ? `<div style="margin-top:4px"><span class="chip cs">${escHtml(e.cat)}</span></div>` : ""}</div><button class="del-btn" onclick="delManifest(${e.id})">&#10005;</button></div>`).join("") || '<div class="card"><p>Start writing your future here.</p></div>'}
+    ${items.map(e=>`<div class="mind-card"><span class="mind-icon">&#10024;</span><div style="flex:1"><div style="font-size:13px;color:var(--text);line-height:1.6">${escHtml(e.text)}</div>${e.cat?`<div style="margin-top:4px"><span class="chip cs">${escHtml(e.cat)}</span></div>`:''}</div><button class="del-btn" onclick="delManifest(${e.id})">&#10005;</button></div>`).join('')||'<div class="card"><p>Start writing your future here.</p></div>'}
   `;
-      }
-      function saveManifest() {
-        const text = document.getElementById("man-text").value.trim();
-        if (!text) return;
-        const cat = document.getElementById("man-cat").value.trim();
-        DB.manifest = DB.manifest || [];
-        DB.manifest.push({
-          id: DB.manifestNextId++,
-          text,
-          cat,
-          date: todayStr(),
-        });
-        document.getElementById("man-text").value = "";
-        document.getElementById("man-cat").value = "";
-        saveDB();
-        buildManifest(8);
-      }
-      function delManifest(id) {
-        DB.manifest = DB.manifest.filter((x) => x.id !== id);
-        saveDB();
-        buildManifest(8);
-      }
+}
+function saveManifest() {
+  const text = document.getElementById('man-text').value.trim(); if(!text) return;
+  const cat  = document.getElementById('man-cat').value.trim();
+  DB.manifest = DB.manifest||[];
+  DB.manifest.push({id:DB.manifestNextId++,text,cat,date:todayStr()});
+  document.getElementById('man-text').value=''; document.getElementById('man-cat').value='';
+  saveDB(); buildManifest(8);
+}
+function delManifest(id) { DB.manifest=DB.manifest.filter(x=>x.id!==id); saveDB(); buildManifest(8); }
 
-      // ============ KNOW ME ============
-      const KNOW_QS = [
-        "What makes me feel most alive and energized?",
-        "What drains me the fastest, even if I enjoy it?",
-        "What does a perfect productive day look like for me?",
-        "What is the one thing I always procrastinate on, and why?",
-        "When am I at my sharpest mentally during the day?",
-        "What does success look like for me in exactly 2 years?",
-        "What is my biggest fear about my goals?",
-        "What kind of person am I becoming?",
-        "What would I do if I knew I could not fail?",
-        "What does rest actually feel like for me?",
-        "What is my relationship with money and why?",
-        "If I could only keep 3 things in my life, what would they be?",
-      ];
-      function buildKnow(idx = 9) {
-        const p = document.getElementById("pnl" + idx);
-        const saved = DB.know || {};
-        p.innerHTML = `
+// ============ KNOW ME ============
+const KNOW_QS = [
+  'What makes me feel most alive and energized?',
+  'What drains me the fastest, even if I enjoy it?',
+  'What does a perfect productive day look like for me?',
+  'What is the one thing I always procrastinate on, and why?',
+  'When am I at my sharpest mentally during the day?',
+  'What does success look like for me in exactly 2 years?',
+  'What is my biggest fear about my goals?',
+  'What kind of person am I becoming?',
+  'What would I do if I knew I could not fail?',
+  'What does rest actually feel like for me?',
+  'What is my relationship with money and why?',
+  'If I could only keep 3 things in my life, what would they be?',
+];
+function buildKnow(idx=9) {
+  const p = document.getElementById('pnl'+idx);
+  const saved = DB.know||{};
+  p.innerHTML = `
     <div class="card" style="margin-bottom:14px"><p>Answer one question a day. Write freely. First answer is usually the truest.</p></div>
-    ${KNOW_QS.map((q, i) => `<div class="know-q"><div class="q">${q}</div><textarea rows="2" placeholder="Write freely..." onblur="saveKnow(${i}, this.value)">${escHtml(saved[i] || "")}</textarea></div>`).join("")}
+    ${KNOW_QS.map((q,i)=>`<div class="know-q"><div class="q">${q}</div><textarea rows="2" placeholder="Write freely..." onblur="saveKnow(${i}, this.value)">${escHtml(saved[i]||'')}</textarea></div>`).join('')}
   `;
-      }
-      function saveKnow(i, val) {
-        DB.know = DB.know || {};
-        DB.know[i] = val;
-        debouncedSave();
-      }
+}
+function saveKnow(i, val) { DB.know=DB.know||{}; DB.know[i]=val; debouncedSave(); }
 
-      // ============ AFFIRMATIONS ============
-      function buildAff(idx = 10) {
-        const p = document.getElementById("pnl" + idx);
-        p.innerHTML = `
+// ============ AFFIRMATIONS ============
+function buildAff(idx=10) {
+  const p = document.getElementById('pnl'+idx);
+  p.innerHTML = `
     <div class="sec-label">Add your own</div>
     <div class="add-row"><input id="naff" placeholder="Write something you need to hear..."><button class="btn btn-amber btn-sm" onclick="addAff()">+ Save</button></div>
     <div class="sec-label">Your affirmation center (${DB.affs.length} saved)</div>
-    ${DB.affs.map((a) => `<div class="aff-card"><span class="aff-icon" style="color:var(--amber)">&#10024;</span><span class="aff-txt">${escHtml(a.text)}</span><button class="aff-del" onclick="delAff(${a.id})">&#10005;</button></div>`).join("") || '<div class="card"><p>No affirmations yet.</p></div>'}
+    ${DB.affs.map(a=>`<div class="aff-card"><span class="aff-icon" style="color:var(--amber)">&#10024;</span><span class="aff-txt">${escHtml(a.text)}</span><button class="aff-del" onclick="delAff(${a.id})">&#10005;</button></div>`).join('')||'<div class="card"><p>No affirmations yet.</p></div>'}
   `;
-      }
-      function addAff() {
-        const v = document.getElementById("naff").value.trim();
-        if (!v) return;
-        DB.affs.unshift({ id: DB.affsNextId++, text: v });
-        document.getElementById("naff").value = "";
-        saveDB();
-        buildAff(10);
-      }
-      function delAff(id) {
-        DB.affs = DB.affs.filter((x) => x.id !== id);
-        saveDB();
-        buildAff(10);
-      }
+}
+function addAff() {
+  const v = document.getElementById('naff').value.trim(); if(!v) return;
+  DB.affs.unshift({id:DB.affsNextId++,text:v});
+  document.getElementById('naff').value='';
+  saveDB(); buildAff(10);
+}
+function delAff(id) { DB.affs=DB.affs.filter(x=>x.id!==id); saveDB(); buildAff(10); }
 
-      // ============ UPSKILL ============
-      function buildUpskill(idx = 11) {
-        const p = document.getElementById("pnl" + idx);
-        const items = (DB.upskill || []).slice().reverse();
-        const tagSet = [
-          ...new Set((DB.upskill || []).map((x) => x.tag).filter(Boolean)),
-        ];
-        p.innerHTML = `
+// ============ UPSKILL ============
+function buildUpskill(idx=11) {
+  const p = document.getElementById('pnl'+idx);
+  const items = (DB.upskill||[]).slice().reverse();
+  const tagSet = [...new Set((DB.upskill||[]).map(x=>x.tag).filter(Boolean))];
+  p.innerHTML = `
     <div class="card" style="margin-bottom:14px"><p>Everything you are learning or want to learn. Tag it, track it, stack it.</p></div>
     <div style="margin-bottom:10px">
       <input id="us-title" placeholder="Skill or topic name...">
@@ -2869,257 +1389,117 @@
       </div>
       <textarea id="us-note" rows="2" placeholder="Notes about this skill..." style="margin-top:6px"></textarea>
     </div>
-    ${tagSet.length ? `<div style="margin-bottom:14px">${tagSet.map((t) => `<span class="skill-tag">${escHtml(t)}</span>`).join("")}</div>` : ""}
-    ${items.map((e) => `<div class="blk"><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(e.title)}</div>${e.note ? `<div style="font-size:12px;color:var(--text2);margin-top:2px">${escHtml(e.note)}</div>` : ""}<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">${e.tag ? `<span class="skill-tag">${escHtml(e.tag)}</span>` : ""}<span class="chip ${e.status === "done" ? "ch" : e.status === "learning" ? "cw" : "cr"}">${e.status === "done" ? "Completed" : e.status === "learning" ? "Learning" : "Want to learn"}</span></div></div><button class="del-btn" onclick="delUpskill(${e.id})">&#10005;</button></div>`).join("") || '<div class="card"><p>Add the first thing you want to learn.</p></div>'}
+    ${tagSet.length?`<div style="margin-bottom:14px">${tagSet.map(t=>`<span class="skill-tag">${escHtml(t)}</span>`).join('')}</div>`:''}
+    ${items.map(e=>`<div class="blk"><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--text)">${escHtml(e.title)}</div>${e.note?`<div style="font-size:12px;color:var(--text2);margin-top:2px">${escHtml(e.note)}</div>`:''}<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">${e.tag?`<span class="skill-tag">${escHtml(e.tag)}</span>`:''}<span class="chip ${e.status==='done'?'ch':e.status==='learning'?'cw':'cr'}">${e.status==='done'?'Completed':e.status==='learning'?'Learning':'Want to learn'}</span></div></div><button class="del-btn" onclick="delUpskill(${e.id})">&#10005;</button></div>`).join('')||'<div class="card"><p>Add the first thing you want to learn.</p></div>'}
   `;
-      }
-      function addUpskill() {
-        const title = document.getElementById("us-title").value.trim();
-        if (!title) return;
-        DB.upskill = DB.upskill || [];
-        DB.upskill.push({
-          id: DB.upskillNextId++,
-          title,
-          tag: document.getElementById("us-tag").value.trim(),
-          status: document.getElementById("us-status").value,
-          note: document.getElementById("us-note").value.trim(),
-          date: todayStr(),
-        });
-        document.getElementById("us-title").value = "";
-        document.getElementById("us-note").value = "";
-        saveDB();
-        buildUpskill(11);
-      }
-      function delUpskill(id) {
-        DB.upskill = DB.upskill.filter((x) => x.id !== id);
-        saveDB();
-        buildUpskill(11);
-      }
+}
+function addUpskill() {
+  const title = document.getElementById('us-title').value.trim(); if(!title) return;
+  DB.upskill = DB.upskill||[];
+  DB.upskill.push({id:DB.upskillNextId++,title,tag:document.getElementById('us-tag').value.trim(),status:document.getElementById('us-status').value,note:document.getElementById('us-note').value.trim(),date:todayStr()});
+  document.getElementById('us-title').value=''; document.getElementById('us-note').value='';
+  saveDB(); buildUpskill(11);
+}
+function delUpskill(id) { DB.upskill=DB.upskill.filter(x=>x.id!==id); saveDB(); buildUpskill(11); }
 
-      // ============ BRAIN DUMP ============
-      function buildDump(idx = 12) {
-        const p = document.getElementById("pnl" + idx);
-        const items = (DB.dump || []).slice().reverse().slice(0, 30);
-        p.innerHTML = `
+// ============ BRAIN DUMP ============
+function buildDump(idx=12) {
+  const p = document.getElementById('pnl'+idx);
+  const items = (DB.dump||[]).slice().reverse().slice(0,30);
+  p.innerHTML = `
     <div class="card" style="margin-bottom:14px"><p>Dump everything here so your mind can think clearly. No filters, no judgment.</p></div>
     <div style="margin-bottom:10px"><textarea id="dump-text" rows="3" placeholder="Type anything. A worry, an idea, a task, a random thought..."></textarea></div>
     <button class="btn btn-amber btn-sm" onclick="saveDump()" style="margin-bottom:20px">Dump it</button>
     <div class="sec-label">${items.length} items dumped</div>
-    ${items.map((e) => `<div class="dump-item"><span class="dump-text">${escHtml(e.text)}</span><button class="del-btn" onclick="delDump(${e.id})">&#10005;</button></div>`).join("") || '<div class="card"><p>Nothing dumped yet.</p></div>'}
+    ${items.map(e=>`<div class="dump-item"><span class="dump-text">${escHtml(e.text)}</span><button class="del-btn" onclick="delDump(${e.id})">&#10005;</button></div>`).join('')||'<div class="card"><p>Nothing dumped yet.</p></div>'}
   `;
-      }
-      function saveDump() {
-        const text = document.getElementById("dump-text").value.trim();
-        if (!text) return;
-        DB.dump = DB.dump || [];
-        DB.dump.push({ id: DB.dumpNextId++, text, date: todayStr() });
-        document.getElementById("dump-text").value = "";
-        saveDB();
-        buildDump(12);
-      }
-      function delDump(id) {
-        DB.dump = DB.dump.filter((x) => x.id !== id);
-        saveDB();
-        buildDump(12);
-      }
+}
+function saveDump() {
+  const text = document.getElementById('dump-text').value.trim(); if(!text) return;
+  DB.dump = DB.dump||[];
+  DB.dump.push({id:DB.dumpNextId++,text,date:todayStr()});
+  document.getElementById('dump-text').value='';
+  saveDB(); buildDump(12);
+}
+function delDump(id) { DB.dump=DB.dump.filter(x=>x.id!==id); saveDB(); buildDump(12); }
 
-      // ============ PAYAL SUGGESTIONS ============
-      function buildSuggestions(idx = 13) {
-        const p = document.getElementById("pnl" + idx);
-        const pc = pct();
-        const energyLast = (DB.energyLog || []).slice(-1)[0];
-        const wins = (DB.wins || []).length;
-        const dumps = (DB.dump || []).length;
-        let dynamic = [];
-        if (pc < 30)
-          dynamic.push({
-            icon: "&#9888;",
-            color: "var(--amber)",
-            text: "Your completion rate is below 30% today. That's okay. Pick just ONE block and finish it. Momentum beats perfection every time.",
-          });
-        if (pc >= 80)
-          dynamic.push({
-            icon: "&#127881;",
-            color: "var(--green)",
-            text: `You've hit ${pc}% completion today. That's genuinely exceptional. Take a real break tonight and celebrate this.`,
-          });
-        if (energyLast && energyLast.mood < 4)
-          dynamic.push({
-            icon: "&#128994;",
-            color: "var(--red)",
-            text: "Your mood score was low last check-in. Don't push through a hard task. Do something that restores you first.",
-          });
-        if (energyLast && energyLast.stress > 7)
-          dynamic.push({
-            icon: "&#9889;",
-            color: "var(--red)",
-            text: "Your stress is high. 5 deep breaths right now, then one task. That's the whole plan.",
-          });
-        if (dumps > 5)
-          dynamic.push({
-            icon: "&#128202;",
-            color: "var(--purple)",
-            text: `You've dumped ${dumps} things out of your head. Good. Go through them once a week and see what needs action vs what just needed to get out.`,
-          });
-        if (wins > 0)
-          dynamic.push({
-            icon: "&#127941;",
-            color: "var(--amber)",
-            text: `You have ${wins} wins logged. On your worst day, come here and read them.`,
-          });
-        if ((DB.journal || []).length === 0)
-          dynamic.push({
-            icon: "&#128221;",
-            color: "var(--blue)",
-            text: "You haven't journaled yet. Just 2 minutes. Open the Journal tab and write whatever is in your head right now.",
-          });
-        const staticCards = [
-          [
-            "&#9201;",
-            "var(--amber)",
-            "Start your timer before you start the task. Action creates readiness.",
-          ],
-          [
-            "&#128161;",
-            "var(--purple)",
-            "When you feel scattered, come back to your 3 priorities. Just 3.",
-          ],
-          [
-            "&#128140;",
-            "var(--blue)",
-            "If something is stuck in your head right now, go dump it. Free the RAM.",
-          ],
-          [
-            "&#9829;",
-            "var(--pink)",
-            "You have someone who loves you. Do not let your side hustle eat your relationship.",
-          ],
-          [
-            "&#127925;",
-            "var(--amber)",
-            "Your music is not a hobby. It is how your brain processes emotion. Protect that 1-hour block every single day.",
-          ],
-        ];
-        const allCards = [
-          ...dynamic,
-          ...staticCards.map(([i, c, t]) => ({ icon: i, color: c, text: t })),
-        ];
-        p.innerHTML = `
+// ============ PAYAL SUGGESTIONS ============
+function buildSuggestions(idx=13) {
+  const p = document.getElementById('pnl'+idx);
+  const pc = pct();
+  const energyLast = (DB.energyLog||[]).slice(-1)[0];
+  const wins = (DB.wins||[]).length;
+  const dumps = (DB.dump||[]).length;
+  let dynamic = [];
+  if(pc < 30) dynamic.push({icon:'&#9888;',color:'var(--amber)',text:"Your completion rate is below 30% today. That's okay. Pick just ONE block and finish it. Momentum beats perfection every time."});
+  if(pc >= 80) dynamic.push({icon:'&#127881;',color:'var(--green)',text:`You've hit ${pc}% completion today. That's genuinely exceptional. Take a real break tonight and celebrate this.`});
+  if(energyLast && energyLast.mood < 4) dynamic.push({icon:'&#128994;',color:'var(--red)',text:"Your mood score was low last check-in. Don't push through a hard task. Do something that restores you first."});
+  if(energyLast && energyLast.stress > 7) dynamic.push({icon:'&#9889;',color:'var(--red)',text:"Your stress is high. 5 deep breaths right now, then one task. That's the whole plan."});
+  if(dumps > 5) dynamic.push({icon:'&#128202;',color:'var(--purple)',text:`You've dumped ${dumps} things out of your head. Good. Go through them once a week and see what needs action vs what just needed to get out.`});
+  if(wins > 0) dynamic.push({icon:'&#127941;',color:'var(--amber)',text:`You have ${wins} wins logged. On your worst day, come here and read them.`});
+  if((DB.journal||[]).length === 0) dynamic.push({icon:'&#128221;',color:'var(--blue)',text:"You haven't journaled yet. Just 2 minutes. Open the Journal tab and write whatever is in your head right now."});
+  const staticCards = [
+    ['&#9201;','var(--amber)','Start your timer before you start the task. Action creates readiness.'],
+    ['&#128161;','var(--purple)','When you feel scattered, come back to your 3 priorities. Just 3.'],
+    ['&#128140;','var(--blue)','If something is stuck in your head right now, go dump it. Free the RAM.'],
+    ['&#9829;','var(--pink)','You have someone who loves you. Do not let your side hustle eat your relationship.'],
+    ['&#127925;','var(--amber)','Your music is not a hobby. It is how your brain processes emotion. Protect that 1-hour block every single day.'],
+  ];
+  const allCards = [...dynamic, ...staticCards.map(([i,c,t])=>({icon:i,color:c,text:t}))];
+  p.innerHTML = `
     <div class="card" style="border-color:var(--amber);margin-bottom:18px"><p style="color:var(--text)">Payal watches your progress and gives you personalised nudges. These update based on how you are actually doing across all your tabs.</p></div>
-    ${allCards.map((c) => `<div class="mind-card" style="border-color:rgba(255,255,255,0.09)"><span class="mind-icon" style="color:${c.color};font-style:normal">${c.icon}</span><p>${c.text}</p></div>`).join("")}
+    ${allCards.map(c=>`<div class="mind-card" style="border-color:rgba(255,255,255,0.09)"><span class="mind-icon" style="color:${c.color};font-style:normal">${c.icon}</span><p>${c.text}</p></div>`).join('')}
   `;
-      }
+}
 
-      // ============ MY RULES ============
-      function buildRules(idx = 14) {
-        const p = document.getElementById("pnl" + idx);
-        const rules = [
-          [
-            "&#35;",
-            "Never plan more than 3 priorities a day.",
-            "Your brain cannot hold more. Pick 3, finish them, then bonus if energy remains.",
-          ],
-          [
-            "&#9654;",
-            "Start with the smallest action, not the hardest.",
-            "ADHD brains resist starting, not continuing. Make the start tiny and automatic.",
-          ],
-          [
-            "&#128276;",
-            "Phone face-down during focus blocks.",
-            "One notification can destroy a 25-minute session. Guard your blocks like meetings.",
-          ],
-          [
-            "&#8635;",
-            "Rest is not wasted time.",
-            "A 10-minute break between blocks is what lets your brain do the next thing well.",
-          ],
-          [
-            "&#10005;",
-            "No guilt for missed blocks.",
-            "You did not fail. Life happened. Note it, move forward. A bad day is not a bad life.",
-          ],
-          [
-            "&#127925;",
-            "Music practice is non-negotiable.",
-            "Your music regulates your emotions and gives your brain the dopamine it needs. Protect it.",
-          ],
-          [
-            "&#9829;",
-            "Your relationship deserves real presence.",
-            "20 minutes of fully present time with her. No phone. No distractions. Just her.",
-          ],
-          [
-            "&#9889;",
-            "High-energy hours are sacred.",
-            "Use your best hours for your hardest tasks. Do not waste peak focus on emails.",
-          ],
-          [
-            "&#128200;",
-            "Track everything, judge nothing.",
-            "Data is just information. The goal is to see patterns, not to feel bad about them.",
-          ],
-          [
-            "&#128218;",
-            "Never stop learning.",
-            "Every skill you add is a brick in a foundation that cannot be taken from you.",
-          ],
-        ];
-        p.innerHTML = `
+// ============ MY RULES ============
+function buildRules(idx=14) {
+  const p = document.getElementById('pnl'+idx);
+  const rules = [
+    ['&#35;','Never plan more than 3 priorities a day.','Your brain cannot hold more. Pick 3, finish them, then bonus if energy remains.'],
+    ['&#9654;','Start with the smallest action, not the hardest.','ADHD brains resist starting, not continuing. Make the start tiny and automatic.'],
+    ['&#128276;','Phone face-down during focus blocks.','One notification can destroy a 25-minute session. Guard your blocks like meetings.'],
+    ['&#8635;','Rest is not wasted time.','A 10-minute break between blocks is what lets your brain do the next thing well.'],
+    ['&#10005;','No guilt for missed blocks.','You did not fail. Life happened. Note it, move forward. A bad day is not a bad life.'],
+    ['&#127925;','Music practice is non-negotiable.','Your music regulates your emotions and gives your brain the dopamine it needs. Protect it.'],
+    ['&#9829;','Your relationship deserves real presence.','20 minutes of fully present time with her. No phone. No distractions. Just her.'],
+    ['&#9889;','High-energy hours are sacred.','Use your best hours for your hardest tasks. Do not waste peak focus on emails.'],
+    ['&#128200;','Track everything, judge nothing.','Data is just information. The goal is to see patterns, not to feel bad about them.'],
+    ['&#128218;','Never stop learning.','Every skill you add is a brick in a foundation that cannot be taken from you.'],
+  ];
+  p.innerHTML = `
     <div class="sec-label">The rules your brain needs</div>
-    ${rules.map(([icon, title, desc]) => `<div class="rule-item"><span class="rule-icon" style="font-style:normal">${icon}</span><div><div class="rule-t">${title}</div><div class="rule-d">${desc}</div></div></div>`).join("")}
+    ${rules.map(([icon,title,desc])=>`<div class="rule-item"><span class="rule-icon" style="font-style:normal">${icon}</span><div><div class="rule-t">${title}</div><div class="rule-d">${desc}</div></div></div>`).join('')}
   `;
-      }
+}
 
-      // ============ MINDSET ============
-      function buildMindset(idx = 15) {
-        const p = document.getElementById("pnl" + idx);
-        const cards = [
-          [
-            "&#129504;",
-            "ADHD does not mean broken. It means your brain runs on a different engine. You have a sports car. This system is your track. Start the engine.",
-          ],
-          [
-            "&#9889;",
-            "Energy crashes are not failure. They are signals. When you feel exhausted, your brain is saying: refuel, not retire.",
-          ],
-          [
-            "&#127942;",
-            "You have a job, music, a girlfriend, two side hustles, and you still care about your health. That is not someone who cannot do things. That is someone doing a LOT of things.",
-          ],
-          [
-            "&#128200;",
-            "Confidence is not a feeling. It is a record. Every time you show up, even at 50%, you add to yours. Your proof is growing every day.",
-          ],
-          [
-            "&#10024;",
-            "Your goals are patient. They are not going anywhere. One block at a time is enough. One day at a time is enough.",
-          ],
-          [
-            "&#127775;",
-            "The world is not against you. Your brain just needs a better track. You are building the track. That takes guts. And you have guts.",
-          ],
-          [
-            "&#128170;",
-            "The most dangerous version of you is when you have a system AND you stick to it. That version is 10 minutes of action away right now.",
-          ],
-        ];
-        p.innerHTML = `
+// ============ MINDSET ============
+function buildMindset(idx=15) {
+  const p = document.getElementById('pnl'+idx);
+  const cards = [
+    ['&#129504;','ADHD does not mean broken. It means your brain runs on a different engine. You have a sports car. This system is your track. Start the engine.'],
+    ['&#9889;','Energy crashes are not failure. They are signals. When you feel exhausted, your brain is saying: refuel, not retire.'],
+    ['&#127942;','You have a job, music, a girlfriend, two side hustles, and you still care about your health. That is not someone who cannot do things. That is someone doing a LOT of things.'],
+    ['&#128200;','Confidence is not a feeling. It is a record. Every time you show up, even at 50%, you add to yours. Your proof is growing every day.'],
+    ['&#10024;','Your goals are patient. They are not going anywhere. One block at a time is enough. One day at a time is enough.'],
+    ['&#127775;','The world is not against you. Your brain just needs a better track. You are building the track. That takes guts. And you have guts.'],
+    ['&#128170;','The most dangerous version of you is when you have a system AND you stick to it. That version is 10 minutes of action away right now.'],
+  ];
+  p.innerHTML = `
     <div class="sec-label">Read this on the hard days</div>
-    ${cards.map(([icon, txt]) => `<div class="mind-card"><span class="mind-icon" style="font-style:normal">${icon}</span><p>${txt}</p></div>`).join("")}
+    ${cards.map(([icon,txt])=>`<div class="mind-card"><span class="mind-icon" style="font-style:normal">${icon}</span><p>${txt}</p></div>`).join('')}
   `;
-      }
+}
 
-      // ============ SUPABASE SETUP GUIDE ============
-      function buildSetup(idx = 16) {
-        const p = document.getElementById("pnl" + idx);
-        const isConfigured = SUPABASE_URL !== "YOUR_SUPABASE_URL";
-        p.innerHTML = `
-    <div class="card" style="border-color:${isConfigured ? "var(--green)" : "var(--amber)"};margin-bottom:18px">
-      <p style="color:var(--text)">${
-        isConfigured
-          ? "✅ Supabase is connected! Your data syncs to the cloud automatically on every device you open this on."
-          : "⚙️ Supabase is NOT set up yet. Your data is saved only in this browser. Follow the steps below — it is free and takes 5 minutes."
+// ============ SUPABASE SETUP GUIDE ============
+function buildSetup(idx=16) {
+  const p = document.getElementById('pnl'+idx);
+  const isConfigured = SUPABASE_URL !== 'YOUR_SUPABASE_URL';
+  p.innerHTML = `
+    <div class="card" style="border-color:${isConfigured?'var(--green)':'var(--amber)'};margin-bottom:18px">
+      <p style="color:var(--text)">${isConfigured
+        ? '✅ Supabase is connected! Your data syncs to the cloud automatically on every device you open this on.'
+        : '⚙️ Supabase is NOT set up yet. Your data is saved only in this browser. Follow the steps below — it is free and takes 5 minutes.'
       }</p>
     </div>
 
@@ -3138,8 +1518,9 @@
     <div class="sec-label">Step 5 — Paste keys into this file</div>
     <div class="host-step"><div class="host-step-num">Edit the file</div><div class="host-step-title">Open this HTML file in Notepad</div><div class="host-step-desc">Open this <code>.html</code> file in Notepad (right-click → Open with → Notepad). Find these two lines near the top of the &lt;script&gt; section:<br><br><code style="display:block;margin-top:8px;font-size:11px">const SUPABASE_URL  = 'YOUR_SUPABASE_URL';<br>const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';</code><br><br>Replace <code>YOUR_SUPABASE_URL</code> and <code>YOUR_SUPABASE_ANON_KEY</code> with the values you copied. Save the file.</div></div>
 
-    <div class="sec-label">Step 6 — Also set your username & password</div>
-    <div class="host-step"><div class="host-step-num">Edit the file</div><div class="host-step-title">Change your login credentials</div><div class="host-step-desc">In the same file, find:<br><code style="display:block;margin-top:8px;font-size:11px">const ALLOWED_USER = 'mylifeOS';<br>const ALLOWED_PASS = 'mypassword123';</code><br>Change these to whatever username and password you want. Save the file again.</div></div>
+    <div class="sec-label">Step 6 — Create your login account</div>
+    <div class="host-step"><div class="host-step-num">In Supabase</div><div class="host-step-title">Authentication → Users → Add user</div><div class="host-step-desc">In the left sidebar, click Authentication, then Users, then "Add user" → "Create new user". Enter an email and password — this is what you'll use to log into the app. Make sure "Auto Confirm User" is turned ON so you don't need to verify the email. Click Create.</div></div>
+    <div class="host-step"><div class="host-step-num">SQL Editor</div><div class="host-step-title">Lock the data to your account</div><div class="host-step-desc">Go to SQL Editor and run this once, so only your logged-in account can read or write your data — not anyone with the link:<br><br><code style="display:block;margin-top:8px;line-height:1.8;font-size:11px">ALTER TABLE "lifeOS_data" ENABLE ROW LEVEL SECURITY;<br>CREATE POLICY "owner_access" ON "lifeOS_data"<br>&nbsp;&nbsp;FOR ALL USING (auth.uid()::text = user_id)<br>&nbsp;&nbsp;WITH CHECK (auth.uid()::text = user_id);</code></div></div>
 
     <div class="sec-label">Step 7 — Host it free on GitHub Pages</div>
     <div class="host-step"><div class="host-step-num">github.com</div><div class="host-step-title">Create a repository</div><div class="host-step-desc">Sign up at <code>github.com</code> (free). Click the "+" in the top right → "New repository". Give it any name (e.g. <code>life-os</code>). Set it to Public. Click "Create repository".</div></div>
@@ -3148,35 +1529,32 @@
 
     <div class="divider"></div>
     <div class="sec-label">About your data</div>
-    <div class="card"><p>Once Supabase is connected, every change you make syncs to the cloud automatically. Open this app on your phone, laptop, or any other device and all your data will be there. Your data is private — only someone with your username and password can see it.</p></div>
+    <div class="card"><p>Once Supabase is connected and you've created your account, every change you make syncs to the cloud automatically. Open this app on your phone, laptop, or any other device, sign in with your email and password, and all your data will be there. Because of the Row Level Security rule above, only your signed-in account can ever read or write your data — even though the code itself is on a public webpage.</p></div>
   `;
-      }
+}
 
-      // ============ INIT ============
-      function initDate() {
-        const d = new Date();
-        document.getElementById("today-str").textContent = d.toLocaleDateString(
-          "en-IN",
-          { weekday: "long", day: "numeric", month: "long", year: "numeric" },
-        );
-      }
+// ============ INIT ============
+function initDate() {
+  const d = new Date();
+  document.getElementById('today-str').textContent = d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+}
 
-      async function startApp() {
-        initSupabase();
-        initDate();
-        checkDailyReset();
-        // Try to load from Supabase first
-        const loaded = await loadFromSupabase();
-        if (!loaded) {
-          // Use localStorage data
-          setSyncBadge(SUPABASE_READY ? "synced" : "local");
-        }
-        renderTabs();
-        renderPanels();
-      }
+async function startApp() {
+  initSupabase();
+  initDate();
+  checkDailyReset();
+  // Try to load from Supabase first
+  const loaded = await loadFromSupabase();
+  if (!loaded) {
+    // Use localStorage data
+    setSyncBadge(SUPABASE_READY ? 'synced' : 'local');
+  }
+  renderTabs();
+  renderPanels();
+}
 
-      // Check if already logged in
-      checkSession();
-    </script>
-  </body>
+// Check if already logged in
+checkSession();
+</script>
+</body>
 </html>
